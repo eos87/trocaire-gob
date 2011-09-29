@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from trocaire.models import *
-from lugar.models import Municipio
-from django.forms import forms
+from lugar.models import Municipio, Comunidad
+from smart_selects.db_fields import ChainedForeignKey 
 
 SI_NO = ((1, u'Si'), (2, u'No'))
 
@@ -35,4 +35,109 @@ class Resultado(models.Model):
     
     class Meta:
         verbose_name = u'Resultado del proyecto'
-        verbose_name_plural = u'Resultados de proyectos'    
+        verbose_name_plural = u'Resultados de proyectos' 
+        
+class Organizador(models.Model):
+    nombre = models.CharField(max_length=200)
+    
+    def __unicode__(self):
+        return u'%s' % self.nombre
+    
+    class Meta:
+        verbose_name_plural = u'Organizadores'
+        
+#class TipoActividad(models.Model):
+#    nombre = models.CharField(max_length=200)
+#    
+#    def __unicode__(self):
+#        return u'%s' % self.nombre
+#    
+#    class Meta:
+#        verbose_name = u'Tipo de Actividad'
+#        verbose_name_plural = u'Tipos de Actividad'
+
+TIPO_ACTIVIDAD = ((1, u'Encuentro'), (2, u'Taller'),
+                  (3, u'Cabildo'), (4, u'Reunión Comunitaria'),
+                  (5, u'Campamento'), (6, u'Festival'),
+                  (7, u'Feria'), (8, u'Gestión ante autoridades'),
+                  (9, u'Diplomado'))
+
+TEMA_ACTIVIDAD = ((1, u'Derechos Humanos'), (2, u'Empoderamiento'),
+                  (3, u'Participación Cuidadana'), (4, u'Incidencia'),
+                  (5, u'Marco Jurídico Nacional'), (6, u'Género'),
+                  (7, u'Fortalecimiento de capacidades de la organización'))
+
+EJES = ((1, u'Interculturalidad'), (2, u'Género'), 
+        (3, u'Medio ambiente'), (4, u'Generacional'))
+
+EVALUACION = ((99, u'No aplica'), (1, u'Muy malo'), (2, u'Malo'), 
+              (3, u'Regular'), (4, u'Bueno'), (5, u'Muy bueno'))
+
+class Actividad(models.Model):
+    organizacion = models.ForeignKey(Organizacion)
+    proyecto = ChainedForeignKey(Proyecto, 
+                                 chained_field="organizacion",
+                                 chained_model_field="organizacion", 
+                                 show_all=False,
+                                 auto_choose=True)    
+    persona_organiza = models.ForeignKey(Organizador)
+    nombre_actividad = models.CharField(max_length=150)
+    fecha = models.DateTimeField()
+    municipio = ChainedForeignKey(Municipio, 
+                                 chained_field="proyecto",
+                                 chained_model_field="proyecto", 
+                                 show_all=False,
+                                 auto_choose=True)    
+    comunidad = ChainedForeignKey(Comunidad, 
+                                 chained_field="municipio",
+                                 chained_model_field="municipio", 
+                                 show_all=False,
+                                 auto_choose=True)
+    tipo_actividad = models.IntegerField(choices=TIPO_ACTIVIDAD)
+    tema_actividad = models.IntegerField(choices=TEMA_ACTIVIDAD)
+    ejes_transversales = models.IntegerField(choices=EJES)
+    #participantes por sexo
+    hombres = models.IntegerField(default=0)
+    mujeres = models.IntegerField(default=0)
+    #participantes por edad
+    adultos = models.IntegerField(default=0, verbose_name=u'Adultos/as')
+    jovenes = models.IntegerField(default=0, verbose_name=u'Jóvenes')
+    ninos = models.IntegerField(default=0, verbose_name=u'Niños/as')
+    #participantes por tipo
+    autoridades = models.IntegerField(default=0, verbose_name=u'Autoridades públicas')
+    maestros = models.IntegerField(default=0)
+    lideres = models.IntegerField(default=0, verbose_name=u'Lideres/zas Comunitarios')
+    pobladores = models.IntegerField(default=0, verbose_name=u'Pobladores/as')
+    estudiantes = models.IntegerField(default=0)
+    miembros = models.IntegerField(default=0, verbose_name=u'Miembros de Org Copartes')
+    resultado = ChainedForeignKey(Resultado, 
+                                  chained_field="proyecto",
+                                  chained_model_field="proyecto", 
+                                  show_all=False,
+                                  auto_choose=True,
+                                  verbose_name=u'Resultado al que aporta')    
+    #evaluaciones
+    relevancia = models.IntegerField(choices=EVALUACION, verbose_name=u'Relevancia del tema/acción')
+    efectividad = models.IntegerField(choices=EVALUACION, verbose_name='Efectividad de la acción')
+    aprendizaje = models.IntegerField(choices=EVALUACION, verbose_name=u'Grado de efectividad')
+    empoderamiento = models.IntegerField(choices=EVALUACION, verbose_name=u'Nivel de empoderamiento')
+    participacion = models.IntegerField(choices=EVALUACION, verbose_name=u'Evaluación de participación')
+    #recursos
+    comentarios = models.TextField(blank=True, default='')
+    acuerdos = models.TextField(blank=True, default='')
+    foto1 = models.ImageField(upload_to='fotos', blank=True, null=True)
+    foto2 = models.ImageField(upload_to='fotos', blank=True, null=True)
+    foto3 = models.ImageField(upload_to='fotos', blank=True, null=True)
+    video = models.CharField(max_length=300, blank=True, default='')
+    
+    def __unicode__(self):
+        return u'%s - %s' % (self.nombre_actividad, self.fecha)
+    
+    class Meta:
+        verbose_name_plural = u'Actividades' 
+       
+    
+    
+    
+    
+       

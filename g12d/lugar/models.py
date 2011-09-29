@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-
 from django.db import models
 
 class Departamento(models.Model):
@@ -24,19 +23,18 @@ class Municipio(models.Model):
     longitud = models.DecimalField('Longitud', max_digits=8, decimal_places=5, blank=True, null = True)
 
     def __unicode__(self):
-        return '%s - %s' % (self.departamento.nombre, self.nombre)
+        return u'%s - %s' % (self.departamento.nombre, self.nombre)
 
     class Meta:
         verbose_name_plural = "Municipios"
         ordering = ['departamento__nombre',]
 
-#class Comunidad(models.Model):
-    #municipio = models.ForeignKey(Municipio)
-    #microcuenca = models.ForeignKey(Microcuenca,null=True,blank=True)
-    #nombre = models.CharField(max_length=40)
+class Comunidad(models.Model):
+    municipio = models.ForeignKey(Municipio)    
+    nombre = models.CharField(max_length=40)
 
-    #class Meta:
-        #verbose_name_plural="Comunidad"
+    class Meta:
+        verbose_name_plural="Comunidad"
 
-    #def __unicode__(self):
-        #return self.nombre
+    def __unicode__(self):
+        return u'%s' % self.nombre
