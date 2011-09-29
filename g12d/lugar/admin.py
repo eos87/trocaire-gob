@@ -1,5 +1,6 @@
 from django.contrib import admin
 from models import Departamento, Municipio, Comunidad
+from contraparte.models import *
 
 class DepartamentoAdmin(admin.ModelAdmin):
     list_display = ['nombre']
@@ -19,10 +20,11 @@ admin.site.register(Municipio, MunicipioAdmin)
 class ComunidadAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, ** kwargs):
         if request.user.is_superuser:        
-            form = super(ComunidadAdmin, self).get_form(request, ** kwargs)
+            form = super(ComunidadAdmin, self).get_form(request, ** kwargs)            
         else:
             form = super(ComunidadAdmin, self).get_form(request, ** kwargs)
-            #form.base_fields['municipio'].queryset = Municipio.objects.filter(Proyecto.objects.filter())
+            proys = Proyecto.objects.filter(organizacion__in=request.user.organizacion_set.all()) 
+            form.base_fields['municipio'].queryset = Municipio.objects.filter(proyecto__in=proys).distinct()
         return form 
 
 admin.site.register(Comunidad, ComunidadAdmin)
