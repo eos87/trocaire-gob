@@ -11,7 +11,7 @@ class ResultadoPrograma(models.Model):
     
     class Meta:
         verbose_name = u'Resultado de programa'
-        verbose_name_plural = u'Resultados de programas'
+        verbose_name_plural = u'Resultados de programa'
         
 class Organizacion(models.Model):
     admin = models.ForeignKey(User)
@@ -29,3 +29,29 @@ class Organizacion(models.Model):
     
     class Meta:
         verbose_name_plural = u'Organizaciones'
+        
+class Generica(models.Model):
+    nombre = models.CharField(max_length=150)
+    
+    def __unicode__(self):
+        return u'%s' % self.nombre
+    
+    class Meta:
+        abstract = True
+
+class TipoActividad(Generica):
+    
+    class Meta:
+        verbose_name = u'Tipo de actividad'
+        verbose_name_plural = u'Tipos de actividad'
+
+class Tema(Generica):
+    
+    class Meta:
+        verbose_name = u'Tema de actividad'
+        verbose_name_plural = u'Temas de actividad'
+        
+class EjeTransversal(Generica):
+    
+    class Meta:
+        verbose_name_plural = u'Ejes transversales'

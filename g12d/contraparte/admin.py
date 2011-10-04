@@ -34,8 +34,8 @@ class ActividadAdmin(admin.ModelAdmin):
                            'municipio', 'comunidad']}),
         ('Tipo, tema y ejes de actividad', {'fields': ['tipo_actividad', 'tema_actividad', 'ejes_transversales']}),
         ('Participantes por sexo', {'fields': [('hombres', 'mujeres'),]}),
-        ('Participantes por edad', {'fields': [('adultos', 'jovenes', 'ninos'),]}),
-        ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres'), 
+        ('Participantes por edad', {'fields': [('adultos', 'jovenes', 'ninos', 'no_dato'),]}),
+        ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres', 'no_dato1'), 
                                                ('pobladores', 'estudiantes', 'miembros')]}),
         (None, {'fields': ['resultado',]}),
         ('Evaluacion', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
@@ -53,7 +53,10 @@ class ActividadAdmin(admin.ModelAdmin):
             form = super(ActividadAdmin, self).get_form(request, ** kwargs)
             form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
             #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
-        return form        
+        return form
+    
+    class Media:
+        js = ('/files/js/actividad.js', )        
     
 admin.site.register(Actividad, ActividadAdmin)
     

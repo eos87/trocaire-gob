@@ -8,3 +8,6 @@ class OrgAdmin(admin.ModelAdmin):
 
 admin.site.register(ResultadoPrograma)
 admin.site.register(Organizacion, OrgAdmin)
+admin.site.register(TipoActividad)
+admin.site.register(Tema)
+admin.site.register(EjeTransversal)

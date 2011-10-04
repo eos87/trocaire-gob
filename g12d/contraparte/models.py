@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.core.exceptions import ValidationError
 from trocaire.models import *
 from lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey 
@@ -46,16 +47,6 @@ class Organizador(models.Model):
     class Meta:
         verbose_name_plural = u'Organizadores'
         
-#class TipoActividad(models.Model):
-#    nombre = models.CharField(max_length=200)
-#    
-#    def __unicode__(self):
-#        return u'%s' % self.nombre
-#    
-#    class Meta:
-#        verbose_name = u'Tipo de Actividad'
-#        verbose_name_plural = u'Tipos de Actividad'
-
 TIPO_ACTIVIDAD = ((1, u'Encuentro'), (2, u'Taller'),
                   (3, u'Cabildo'), (4, u'Reunión Comunitaria'),
                   (5, u'Campamento'), (6, u'Festival'),
@@ -93,17 +84,19 @@ class Actividad(models.Model):
                                  chained_model_field="municipio", 
                                  show_all=False,
                                  auto_choose=True)
-    tipo_actividad = models.IntegerField(choices=TIPO_ACTIVIDAD)
-    tema_actividad = models.IntegerField(choices=TEMA_ACTIVIDAD)
-    ejes_transversales = models.IntegerField(choices=EJES)
+    tipo_actividad = models.ForeignKey(TipoActividad)
+    tema_actividad = models.ForeignKey(Tema)
+    ejes_transversales = models.ForeignKey(EjeTransversal)
     #participantes por sexo
     hombres = models.IntegerField(default=0)
     mujeres = models.IntegerField(default=0)
     #participantes por edad
+    no_dato = models.BooleanField(verbose_name='No hay datos')
     adultos = models.IntegerField(default=0, verbose_name=u'Adultos/as')
     jovenes = models.IntegerField(default=0, verbose_name=u'Jóvenes')
     ninos = models.IntegerField(default=0, verbose_name=u'Niños/as')
     #participantes por tipo
+    no_dato1 = models.BooleanField(verbose_name='No hay datos')
     autoridades = models.IntegerField(default=0, verbose_name=u'Autoridades públicas')
     maestros = models.IntegerField(default=0)
     lideres = models.IntegerField(default=0, verbose_name=u'Lideres/zas Comunitarios')
@@ -132,6 +125,19 @@ class Actividad(models.Model):
     
     def __unicode__(self):
         return u'%s - %s' % (self.nombre_actividad, self.fecha)
+    
+    def clean(self):
+        suma_base = self.hombres + self.mujeres
+        suma_edad = self.adultos + self.jovenes + self.ninos
+        suma_tipo = self.autoridades + self.maestros + self.lideres + self.pobladores + self.estudiantes + self.miembros
+        
+        if not self.no_dato:
+            if suma_base != suma_edad:
+                raise ValidationError('La suma de los participantes por edad no concuerda')
+            
+        if not self.no_dato1:
+            if suma_base != suma_tipo:
+                raise ValidationError('La suma de los participantes por tipo no concuerda')
     
     class Meta:
         verbose_name_plural = u'Actividades' 
