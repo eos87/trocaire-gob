@@ -71,7 +71,7 @@ class Actividad(models.Model):
                                  chained_model_field="organizacion", 
                                  show_all=False,
                                  auto_choose=True)    
-    persona_organiza = models.ForeignKey(Organizador)
+    persona_organiza = models.ForeignKey(Organizador, verbose_name=u'Persona que organiza la actividad')
     nombre_actividad = models.CharField(max_length=150)
     fecha = models.DateTimeField()
     municipio = ChainedForeignKey(Municipio, 
