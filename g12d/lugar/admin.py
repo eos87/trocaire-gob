@@ -30,7 +30,7 @@ class ComunidadAdmin(admin.ModelAdmin):
         return form
     
     class Media:        
-        js = ('/files/js/bubaloo.js') 
+        js = ('/files/js/bubaloo.js', ) 
 
 admin.site.register(Comunidad, ComunidadAdmin)
 
