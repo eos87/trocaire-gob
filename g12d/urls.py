@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'g12d.views.home', name='home'),
+    url(r'^fillout/$', include('formutils.urls')),
     url(r'^proyecto/', include('contraparte.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

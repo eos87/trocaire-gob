@@ -113,7 +113,8 @@ INSTALLED_APPS = (
     'g12d.lugar',
     'g12d.trocaire',
     'g12d.contraparte',
-    'smart_selects',
+    #'g12d.formutils',
+    'smart_selects',    
 )
 
 # A sample logging configuration. The only tangible logging
