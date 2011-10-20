@@ -3,13 +3,29 @@
 
 {% block extra_head %}
 {{form.media}}
+{{form.foo}}
+<link href="/files/css/jquery.multiselect.css" rel="stylesheet" type="text/css"/>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/files/js/jquery.multiselect.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#id_meses").multiselect({
+	    noneSelectedText: 'Mes',
+	    selectedText: '# seleccionados',
+	    minWidth: 130
+	});
+});
+</script>
 {% endblock %}
 
 {% block content %}
 <form action="." method="post">
+	{% csrf_token %}
 	<table>
 		{{form.as_table}}
 	</table>
+	<input type="submit" value="Consultar" />
 </form>
-{{form.foo}}
+<div>{{query}}</div>
 {% endblock %}

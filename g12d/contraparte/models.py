@@ -123,6 +123,14 @@ class Actividad(models.Model):
     foto3 = models.ImageField(upload_to='fotos', blank=True, null=True)
     video = models.CharField(max_length=300, blank=True, default='')
     
+    mes = models.IntegerField(editable=False)
+    year = models.IntegerField(editable=False)
+    
+    def save(self, *args, **kwargs):
+        self.mes = self.fecha.month
+        self.year = self.fecha.year
+        super(Actividad, self).save(*args, **kwargs)
+    
     def __unicode__(self):
         return u'%s - %s' % (self.nombre_actividad, self.fecha)
     
