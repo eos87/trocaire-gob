@@ -27,5 +27,10 @@ $(document).ready(function(){
 	</table>
 	<input type="submit" value="Consultar" />
 </form>
-<div>{{query}}</div>
+<div>
+<h3>Resultados</h3>
+{% for result in resultados %}
+<a href="/proyecto/resultado/{{result.id}}/">{{result.nombre_corto}}</a>
+{% endfor %}
+</div>
 {% endblock %}
