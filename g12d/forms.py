@@ -20,7 +20,7 @@ ANIOS_CHOICE = (('', u'Año'), (2010, 2010), (2011, 2011), (2012, 2012), )
 
 class ProyectoForm(FormFKAutoFill):
     organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all())
-    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all())
+    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all())    
     meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, error_messages={'required': 'Seleccione al menos un mes'}, required=False)    
     anio = forms.ChoiceField(choices=ANIOS_CHOICE, error_messages={'required': u'Seleccione un año'}, required=False, label=u'Año')
 #    departamento = forms.ModelChoiceField(queryset=Departamento.objects.all())
@@ -30,7 +30,7 @@ class ProyectoForm(FormFKAutoFill):
     class Foo:
         config = [{'on_change': {'field': 'organizacion'},
                    'fill': {'field': 'proyecto', 'model': 'Proyecto', 'app_label': 'contraparte'},
-                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}}]
+                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}},]
 
 #--- parametros para creacion del form de cruces ----
 first_class = {'tipo_actividad': ['tipo_actividad'], 

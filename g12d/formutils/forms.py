@@ -68,8 +68,7 @@ CODE = u'''<script type="text/javascript">
                 });
             });                        
         });
-        function loadData(item, elem, dest, sel){
-            console.log(sel);
+        function loadData(item, elem, dest, sel){            
             $.get('/fillout/?app='+item.fill.app_label
                 +'&model='+item.fill.model
                 +'&val='+$(elem).val()
