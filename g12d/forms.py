@@ -52,8 +52,6 @@ recursos = {'comentarios': ['comentarios'],
             'acuerdos': ['acuerdos'],
             'fotos': ['foto1', 'foto2', 'foto3'],
             'video': ['video']}
-
-tipo = {'participantes': 'sum', 'evaluacion': 'count'}        
     
 class SubFiltroForm(forms.Form):
     main_var = forms.ChoiceField(choices=to_choices(first_class.keys()), 
@@ -67,6 +65,9 @@ class SubFiltroForm(forms.Form):
     recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
                                  widget=RadioSelect(attrs={'class':'unique'}),
                                  required=False)
+    total = forms.BooleanField(required=False, label=u"Ver totales")
+    bar_graph = forms.BooleanField(required=False, label=u"Gráfico de barras")
+    pie_graph = forms.BooleanField(required=False, label=u"Gráfico de pastel")
     
     def clean(self):
         cleaned_data = self.cleaned_data

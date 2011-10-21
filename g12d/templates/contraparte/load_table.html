@@ -1,0 +1,61 @@
+{% load tools %}
+
+<a class="guardarXLS" href="#" onclick="exportarXLS('result_table'); return false;">Exportar a XLS</a>
+<div id="result_table">
+	<table class="result_table">
+		<thead>			
+			<tr>
+				<th rowspan="2">{{request.session.main|unslugify}}</th>
+				<th colspan="{{opts2|length}}">{{request.session.var2.1|unslugify}}</th>
+				{% if request.session.total %}
+				<th rowspan="2">Total</th>
+				{% endif %}				
+			</tr>
+			<tr>				
+				{% for value in opts2 %}
+				{% if tipo == 'choice' %}
+				<th>{{value.1}}</th>
+				{% else %}
+				<th>{{value|title}}</th>
+				{% endif %}
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in dicc.items %}
+			<tr>
+				<td>{{key}}</td>
+				{% for k in opts2 %}
+					{% if tipo == 'choice' %}
+					<td>{{value|get_value:k.1|length}}</td>
+					{% else %}
+					<td>{{value|get_value:k}}</td>
+					{% endif %}
+				{% endfor %}
+				{% if request.session.total %}
+					{% if tipo == 'choice' %}
+					<td>{{value|total_dict_query}}</td>
+					{% else %}
+					<td>{{value|total_dict}}</td>
+					{% endif %}
+				{% endif %}
+			</tr>			
+			{% endfor %}
+			{% if request.session.total %}
+			<tr>
+				<td><b>Total</b></td>
+				{% for k in opts2 %}  
+                <td>{% if tipo == 'choice' %}{{dicc|total_per_query_key:k.1}}{% else %}{{dicc|total_per_key:k}}{% endif %}</td>
+                {% endfor %}
+                <td>
+                {% if tipo == 'choice' %}
+                {{dicc|total_general:1}}
+                {% else %}
+                {{dicc|total_general}}
+                {% endif %}
+                </td>
+			</tr>
+			{% endif %}
+		</tbody>
+	</table>
+</div>

@@ -1,6 +1,28 @@
 {% extends "base.html" %}
+{% load tools %}
+
+{% block title %}
+{{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}
+{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript" src="/files/js/table.exporting.js"></script>
+<script type="text/javascript" src="/files/js/highcharts.js"></script>
+<script type="text/javascript" src="/files/js/exporting_patched.js"></script>
+{% endblock %}
 
 {% block content %}
-{{opts2}}<br>
-{{dicc}}
+<h3>{{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}</h3>
+{% load_table dicc opts2 request tipo %}
+<br>
+{% if request.session.bar_graph %}
+<hr>
+{% bar_graph dicc request tipo %}
+{% endif %}
+<br>
+{% if request.session.pie_graph %}
+<hr>
+{% pie_graph dicc request tipo %}
+{% endif %}
+
 {% endblock %}

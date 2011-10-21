@@ -1,0 +1,94 @@
+{% load tools %}
+<style type="text/css">
+#divp, #divp2{
+	float: left;
+	margin-left: 10px;
+	border: 1px #eee solid;
+	margin-bottom: 15px;
+	padding-top: 1px;
+}
+</style>
+<script type="text/javascript">	
+	var plotOptions1 = {
+        pie: {
+           allowPointSelect: true,
+           cursor: 'pointer',
+           dataLabels: {
+              enabled: false
+           },
+           showInLegend: true
+        },
+        series: {
+           dataLabels: {
+               enabled: true,
+               align: "center",
+               formatter: function() {
+                   return ''+ this.percentage.toFixed(0) + ' %';
+               },
+               color: '#000',
+               style: {
+                   font: '12px Trebuchet MS, Verdana, sans-serif'
+               }
+           }
+       }
+   }
+   var tooltip1 = {
+       formatter: function() {
+           return '<b>'+ this.point.name +'</b>: '+ this.y;
+       }
+   }       
+    $(document).ready(function() {
+    	var chart1 = new Highcharts.Chart({
+            chart: {
+                renderTo: 'divp',
+                defaultSeriesType: 'pie',
+                height: 380,
+                width: 380
+            },
+            title: {
+                text: '{{request.session.main|unslugify}}'
+            },
+            subtitle: {
+                text: ''
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            tooltip: tooltip1,
+            plotOptions: plotOptions1,
+            series: [{data: [
+                             {% for key, value in dicc.items %}
+                             ['{{key}}', {% if tipo == 'choice' %}{{value|total_dict_query}}{% else %}{{value|total_dict}}{% endif %}],
+                             {% endfor %}
+                             ]
+            	}]
+        });
+    	var chart2 = new Highcharts.Chart({
+            chart: {
+                renderTo: 'divp2',
+                defaultSeriesType: 'pie',
+                height: 380,
+                width: 380
+            },
+            title: {
+                text: '{{request.session.var2.1|unslugify}}'
+            },
+            subtitle: {
+                text: ''
+            },
+//             colors: ['#058DC7', '#50B432', '#ED561B', '#6AF9C4', '#DDDF00', '#24CBE5', '#64E572', '#FF9655'],
+            tooltip: tooltip1,
+            plotOptions: plotOptions1,
+            series: [{data: [
+                             {% for k in dicc.itervalues.next.keys %}  
+                             ['{{k}}', {% if tipo == 'choice' %}{{dicc|total_per_query_key:k}}{% else %}{{dicc|total_per_key:k}}{% endif %}],
+                             {% endfor %}
+                             ]
+            	}]
+        });
+    });
+</script>
+<div>	
+	<h3>Gráficos de Pastel</h3>
+	<div id="divp"></div>
+	<div id="divp2"></div>
+	<div class="clean"></div>	
+</div>

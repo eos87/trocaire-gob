@@ -1,0 +1,31 @@
+/*------------------------------ CSS para TABLAS --------------------------------*/
+.result_table caption {
+	text-align: left;
+	font-size: 15px;
+	color: #8c8f3d;
+	font-family: Trebuchet MS, Verdana, sans-serif;
+	padding-left: 13px;
+	padding-top: 5px;
+}
+.result_table th {
+	font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 11px;
+	text-align: center;
+	color: #069;
+	border-right: 1px solid #ded3ba;
+	border-bottom: 1px solid #ded3ba;
+	letter-spacing: 1px;
+	text-transform: uppercase;	
+	padding: 10px 5px 4px 12px;
+	background: #EDEBEA url(/files/images/bg_header.png) repeat-x;
+	vertical-align: middle;
+}
+.result_table td {
+	font: normal 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	border-right: 1px solid #E0DDD2;
+	border-bottom: 1px solid #E0DDD2;
+	padding: 6px 12px 6px 12px;
+	color: #696969;
+	background: #FFFFFF;
+}

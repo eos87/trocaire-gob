@@ -1,0 +1,72 @@
+{% load tools %}
+<script type="text/javascript">	
+	var plotOptions = {
+        column: {            
+            borderWidth: 0,
+            pointPadding: 0.2
+        },
+        series: {           
+            dataLabels: {
+                enabled: true,
+                align: "center",
+                formatter: function() {
+                    return ''+ this.y.toFixed(0);
+                },
+                color: '#000',
+                style: {
+                    font: '12px Trebuchet MS, Verdana, sans-serif'
+                }
+            }
+        }
+    }
+    var tooltip = {
+        formatter: function() {
+            return ''+
+                '<b>' + this.x + ' | '+ this.series.name +':</b> '+ this.y;
+        }
+    }
+    var leyenda = {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'bottom',
+        shadow: true
+    }    
+    $(document).ready(function() {
+        var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'grafo',
+                defaultSeriesType: 'column',
+                height: 480,
+                width: 960
+            },
+            title: {
+                text: '{{request.session.var2.1|unslugify}} vs {{request.session.main|unslugify}}'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: [
+                    {% for key in dicc.keys %}'{{key}}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                ]
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidades'
+                }
+            },
+            legend: leyenda,
+            tooltip: tooltip,
+            plotOptions: plotOptions,
+            series: [
+                     {% for k in dicc.itervalues.next.keys %}                         
+                     {name: '{{k}}', data: [{% for key, value in dicc.items %}{% if tipo == 'choice' %}{{value|get_value:k|length}}{% else %}{{value|get_value:k}}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}]},
+                     {% endfor %}
+            ]
+        });
+    });
+</script>
+<h3>Gráfico de barras</h3>
+<div id="grafo"></div>

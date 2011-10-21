@@ -2,6 +2,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template.context import RequestContext
 from django.db.models.loading import get_model
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from g12d.forms import *
 from models import *
@@ -37,14 +38,26 @@ def resultado_detail(request, id):
         tabla_params = {}
         form = SubFiltroForm(request.POST)
         if form.is_valid():
+            #almacenando variable principal en session
             request.session['main'] = form.cleaned_data['main_var']
-            for key in [a for a in form.cleaned_data.keys() if not a == 'main_var']:
+            for key in [a for a in form.cleaned_data.keys() if not a in ['main_var', 'total', 'bar_graph', 'pie_graph']]:
                 if form.cleaned_data[key]:
+                    #almacenando variable dos en session
                     request.session['var2'] = (key, form.cleaned_data[key])
+            
+            request.session['total'] = True if form.cleaned_data['total'] else False            
+            request.session['bar_graph'] = True if form.cleaned_data['bar_graph'] else False
+            request.session['pie_graph'] = True if form.cleaned_data['pie_graph'] else False                                                                                       
                     
             return HttpResponseRedirect('/proyecto/resultado/%s/output' % resultado.id)                                
     else:
-        form = SubFiltroForm()                                             
+        form = SubFiltroForm()
+        
+        #eliminando las variables de session
+        for a in ['var2', 'main', 'total', 'bar_graph', 'pie_graph']:
+            if a in request.session:
+                del request.session[a]
+                                            
     return render_to_response('contraparte/resultado_detail.html', RequestContext(request, locals()))
 
 def output(request, id):
@@ -59,14 +72,22 @@ def output(request, id):
     if var2[0] == 'evaluacion':
         opts2 = EVALUACION
         tipo = 'choice'
-    values = eval(var2[0])    
+        values = eval(var2[0])
+    elif var2[0] == 'participantes':
+        opts2 = eval(var2[0])[var2[1]]
+        tipo = 'sum'
     
     for meh in opts:
-        dicc[meh] = {}        
+        dicc[meh] = {}
+        qs = query.filter(resultado=resultado, **{main_field:meh})        
         for foo in opts2:
             if tipo == 'choice':
                 op = foo[0]
-            dicc[meh][foo[1]] = query.filter(**{main_field:meh, values[var2[1]]:op})            
+                dicc[meh][foo[1]] = qs.filter(**{values[var2[1]]:op})
+            elif tipo == 'sum':  
+                suma = qs.aggregate(campo_sum=Sum(foo))['campo_sum']
+                dicc[meh][foo] = suma or 0
+                
                             
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 
