@@ -63,7 +63,7 @@ class SubFiltroForm(forms.Form):
                                    widget=RadioSelect(attrs={'class':'unique'}),
                                    required=False)
     recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
-                                 widget=RadioSelect(attrs={'class':'unique'}),
+                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
                                  required=False)
     total = forms.BooleanField(required=False, label=u"Ver totales")
     bar_graph = forms.BooleanField(required=False, label=u"Gráfico de barras")
