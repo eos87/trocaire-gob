@@ -113,6 +113,7 @@ INSTALLED_APPS = (
     'g12d.lugar',
     'g12d.trocaire',
     'g12d.contraparte',
+    'g12d.clippy',
     #'g12d.formutils',
     'smart_selects',    
 )

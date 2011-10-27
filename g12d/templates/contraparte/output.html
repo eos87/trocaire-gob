@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load tools %}
+{% load clippy %}
 
 {% block title %}
 {{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}
@@ -9,9 +10,27 @@
 <script type="text/javascript" src="/files/js/table.exporting.js"></script>
 <script type="text/javascript" src="/files/js/highcharts.js"></script>
 <script type="text/javascript" src="/files/js/exporting_patched.js"></script>
+<script type='text/javascript' src='/files/js/jquery.tipsy.js'></script>
+<link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#share').click(function(){
+			$.get('?url=1', function(data){
+				console.log(data);
+			});
+		});		
+	});
+	
+	$(function() {
+	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'n'});
+	 });
+</script>
 {% endblock %}
 
 {% block content %}
+<a href="#" id="share">Compartir</a> | <a href="#">Guardar para informe</a><br>
+<span id="clippy_117">Texto a copiar :D</span>
+{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
 <h3>{{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}</h3>
 {% load_table dicc opts2 request tipo %}
 <br>

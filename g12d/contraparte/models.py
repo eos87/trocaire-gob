@@ -149,3 +149,9 @@ class Actividad(models.Model):
     
     class Meta:
         verbose_name_plural = u'Actividades' 
+        
+class Output(models.Model):
+    
+    class Meta:
+        verbose_name = u'Salida'
+        verbose_name_plural = u'Salidas'

@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template.context import RequestContext
 from django.db.models.loading import get_model
 from django.db.models import Sum
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from g12d.forms import *
 from models import *
 
@@ -88,6 +88,10 @@ def output(request, id):
                 suma = qs.aggregate(campo_sum=Sum(foo))['campo_sum']
                 dicc[meh][foo] = suma or 0
                 
+    url = request.GET.get('url', '')
+    if url != '':
+        
+        return HttpResponse(url)               
                             
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 
