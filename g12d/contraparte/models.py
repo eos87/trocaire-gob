@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 from trocaire.models import *
 from lugar.models import Municipio, Comunidad
-from smart_selects.db_fields import ChainedForeignKey 
+from smart_selects.db_fields import ChainedForeignKey
+import short
 
 SI_NO = ((1, u'Si'), (2, u'No'))
 
@@ -151,6 +153,16 @@ class Actividad(models.Model):
         verbose_name_plural = u'Actividades' 
         
 class Output(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True)
+    date = models.DateField()
+    time = models.TimeField(blank=True, null=True)    
+    params = models.TextField()
+    comment = models.TextField(blank=True, default='')
+    file = models.BooleanField()
+    
+    def _hash(self):
+        if self.id:
+            return short.encode_url(self.id) 
     
     class Meta:
         verbose_name = u'Salida'

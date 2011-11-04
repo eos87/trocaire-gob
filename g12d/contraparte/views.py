@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponse
 from g12d.forms import *
 from models import *
+import datetime
 
 def filtro_proyecto(request):
     proy_params = {}
@@ -89,9 +90,29 @@ def output(request, id):
                 dicc[meh][foo] = suma or 0
                 
     url = request.GET.get('url', '')
+    comment = request.GET.get('comment', '')
+    save = request.GET.get('save', '')
     if url != '':
+        #guardando la session y generar URL
+        params = {}
+        params['main'] = request.session['main']
+        params['var2'] = request.session['var2']
+        params['proy_params'] = request.session['proy_params']
+        params['total'] = True if 'total' in request.session else False
+        params['bar_graph'] = True if 'bar_graph' in request.session else False
+        params['pie_graph'] = True if 'pie_graph' in request.session else False
+        params['resultado__id'] = resultado.id
         
-        return HttpResponse(url)               
+        obj, created = Output.objects.get_or_create(params=str(params),
+                                           date=datetime.date.today(),
+                                           user=request.user)        
+        if save == '1':
+            obj.file = True
+            if comment:
+                obj.comment = comment
+        obj.time = datetime.datetime.time(datetime.datetime.now())
+        obj.save()        
+        return HttpResponse('http://localhost:8000/%s' % obj._hash())               
                             
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 

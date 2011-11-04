@@ -59,6 +59,6 @@ class ActividadAdmin(admin.ModelAdmin):
         js = ('/files/js/actividad.js', )        
     
 admin.site.register(Actividad, ActividadAdmin)
-    
+admin.site.register(Output)    
     
     

@@ -22,7 +22,7 @@
 	});
 	
 	$(function() {
-	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'n'});
+	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'w'});
 	 });
 </script>
 {% endblock %}
@@ -31,6 +31,7 @@
 <a href="#" id="share">Compartir</a> | <a href="#">Guardar para informe</a><br>
 <span id="clippy_117">Texto a copiar :D</span>
 {% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+
 <h3>{{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}</h3>
 {% load_table dicc opts2 request tipo %}
 <br>
