@@ -16,8 +16,10 @@
 	$(document).ready(function(){
 		$('#share').click(function(){
 			$.get('?url=1', function(data){
-				console.log(data);
+				$('#clippy_117').html(data);
+				$('#copiador').show();				
 			});
+			return false;
 		});		
 	});
 	
@@ -29,8 +31,10 @@
 
 {% block content %}
 <a href="#" id="share">Compartir</a> | <a href="#">Guardar para informe</a><br>
-<span id="clippy_117">Texto a copiar :D</span>
-{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+<div id="copiador" style="display: none;">
+	<span id="clippy_117"></span>
+	{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+</div>
 
 <h3>{{request.session.var2.1|unslugify}} por {{request.session.main|unslugify}}</h3>
 {% load_table dicc opts2 request tipo %}

@@ -7,6 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from g12d.forms import *
 from models import *
 import datetime
+from django.contrib.sites.models import Site
+
 
 def filtro_proyecto(request):
     proy_params = {}
@@ -112,7 +114,7 @@ def output(request, id):
                 obj.comment = comment
         obj.time = datetime.datetime.time(datetime.datetime.now())
         obj.save()        
-        return HttpResponse('http://localhost:8000/%s' % obj._hash())               
+        return HttpResponse('%s/%s' % (Site.objects.all()[0].domain, obj._hash()))               
                             
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 
