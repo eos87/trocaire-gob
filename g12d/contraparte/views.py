@@ -65,15 +65,15 @@ def resultado_detail(request, id):
     return render_to_response('contraparte/resultado_detail.html', RequestContext(request, locals()))
 
 def output(request, id, saved_params=None):
-    params = request.session['proy_params']
-    main_field = request.session['main']
-    var2 = request.session['var2']
-    
     #chequear si no se trara de una salida guardada y reasignar variables    
     if saved_params:
         params = saved_params['proy_params']
         main_field = saved_params['main']
         var2 = saved_params['var2']
+    else:
+        params = request.session['proy_params']
+        main_field = request.session['main']
+        var2 = request.session['var2']
         
     query = _get_query(params)
     resultado = get_object_or_404(Resultado, id=id)    
@@ -136,7 +136,8 @@ def shortview(request, hash):
     saved_out = get_object_or_404(Output, id=short.decode_url(hash))
     #obteniendo los parametros de la salida guardada o compartida y luego el query
     variables = output(request, eval(saved_out.params)['resultado__id'], eval(saved_out.params))
-    variables['noshare'] = True       
+    variables['noshare'] = True 
+    print variables      
     
     return render_to_response('contraparte/output.html', RequestContext(request, variables))
 

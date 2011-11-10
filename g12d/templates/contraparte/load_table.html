@@ -5,8 +5,8 @@
 	<table class="result_table">
 		<thead>			
 			<tr>
-				<th rowspan="2">{{request.session.main|unslugify}}</th>
-				<th colspan="{{opts2|length}}">{{request.session.var2.1|unslugify}}</th>
+				<th rowspan="2">{{main_field|unslugify}}</th>
+				<th colspan="{{opts2|length}}">{{var2.1|unslugify}}</th>
 				{% if request.session.total %}
 				<th rowspan="2">Total</th>
 				{% endif %}				

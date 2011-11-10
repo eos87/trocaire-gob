@@ -2,6 +2,34 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<a href="#">Por Programa</a><br>
-<a href="{% url filtro_proyecto %}">Por Proyectos</a>
+<div class="banner">	
+	<div class="index-nav">
+		<div class="index-buttons">
+			<div class="centrar">
+				<div class="navbutton" onclick="window.location.href='#';">
+					<center><img src="/files/img/programa.png" alt="Programa"></center>
+					<div class="text">						
+						<span>Filtros de actividades</span>
+						<a href="#">Programa</a>
+					</div>
+				</div>									
+				<div class="navbutton" onclick="window.location.href='/proyecto/';">
+					<center><img src="/files/img/proyectos.png" alt="Proyectos"></center>
+					<div class="text">
+						<span>Filtros de actividades</span>
+						<a href="{% url filtro_proyecto %}">Proyectos</a>
+					</div>
+				</div>				
+				<div class="navbutton" onclick="window.location.href='#';">
+					<center><img src="/files/img/manual.png" alt="Manual"></center>
+					<div class="text">
+						<span>Manual de usuario</span>
+						<a href="#">Manual</a>
+					</div>
+				</div>
+			</div>
+		</div>		
+	</div>	
+	<div class="clean"></div>
+</div>
 {% endblock %}

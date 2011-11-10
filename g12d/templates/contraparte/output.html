@@ -13,28 +13,32 @@
 <script type='text/javascript' src='/files/js/jquery.tipsy.js'></script>
 <link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
 
-{% if not noshare %}
+
 <script type="text/javascript">
 	$(document).ready(function(){
+		{% if not noshare %}
 		$('#share').click(function(){
 			$.get('?url=1', function(data){
 				$('#clippy_117').html(data);
 				$('#copiador').show();				
 			});
 			return false;
-		});		
+		});
+		$('#sharesave').click(function(){
+			
+		});
+		{% endif %}
 	});
 	
 	$(function() {
 	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'w'});
 	 });
 </script>
-{% endif %}
 {% endblock %}
 
 {% block content %}
 {% if not noshare %}
-<a href="#" id="share">Compartir</a> | <a href="#">Guardar para informe</a><br>
+<a href="#" id="share">Compartir</a> | <a href="#" id="sharesave">Guardar para informe</a><br>
 <div id="copiador" style="display: none;">
 	<span id="clippy_117"></span>
 	{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
@@ -42,12 +46,14 @@
 {% endif %}
 
 <h3>{{var2.1|unslugify}} por {{main_field|unslugify}}</h3>
-{% load_table dicc opts2 request tipo %}
+{% load_table dicc opts2 var2 main_field tipo %}
 <br>
-{% if request.session.bar_graph %}
+
+{% if request.session.bar_graph or saved_params.bar_graph %}
 <hr>
 {% bar_graph dicc var2 main_field tipo %}
 {% endif %}
+
 <br>
 {% if request.session.pie_graph %}
 <hr>

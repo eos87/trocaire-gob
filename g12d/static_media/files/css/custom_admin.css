@@ -20,8 +20,7 @@
     width: 100%;
     background: url(/files/img/degradado.png) repeat-x;
     float: left;
-    margin-top: -26px;
-    
+    margin-top: -26px;    
 }
 .section{
     color: #025a8b !important;
@@ -29,7 +28,6 @@
 .breadcrumbs{
     padding-left: 15px !important;
 }
-
 .aux1{
     margin-left: 10px;
 }
