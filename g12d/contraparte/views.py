@@ -4,10 +4,11 @@ from django.template.context import RequestContext
 from django.db.models.loading import get_model
 from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.sites.models import Site
 from g12d.forms import *
 from models import *
+import short
 import datetime
-from django.contrib.sites.models import Site
 
 
 def filtro_proyecto(request):
@@ -15,25 +16,25 @@ def filtro_proyecto(request):
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
         if form.is_valid():
-            proy_params['organizacion'] = form.cleaned_data['organizacion']
-            proy_params['proyecto'] = form.cleaned_data['proyecto']
+            proy_params['organizacion__id'] = form.cleaned_data['organizacion'].id
+            proy_params['proyecto__id'] = form.cleaned_data['proyecto'].id
             proy_params['mes__in'] = form.cleaned_data['meses']
             proy_params['fecha__year'] = form.cleaned_data['anio']
             
             proy_params = checkParams(proy_params)
             request.session['proy_params'] = proy_params 
             
-            resultados = Resultado.objects.filter(proyecto=proy_params['proyecto'])            
+            resultados = Resultado.objects.filter(proyecto__id=proy_params['proyecto__id'])            
     else:
         form = ProyectoForm()
             
     return render_to_response('contraparte/filtro.html', RequestContext(request, locals()))
 
-def _get_query(request):
-    return Actividad.objects.filter(**request.session['proy_params'])
+def _get_query(params):        
+    return Actividad.objects.filter(**params)
 
 #verificcar que no existan parametros vacios
-checkParams = lambda x: dict((k, v) for k,v in x.items() if x[k])
+checkParams = lambda x: dict((k, v) for k, v in x.items() if x[k])
 
 def resultado_detail(request, id):
     resultado = get_object_or_404(Resultado, id=id)    
@@ -63,11 +64,19 @@ def resultado_detail(request, id):
                                             
     return render_to_response('contraparte/resultado_detail.html', RequestContext(request, locals()))
 
-def output(request, id):
-    query = _get_query(request)
-    resultado = get_object_or_404(Resultado, id=id)    
+def output(request, id, saved_params=None):
+    params = request.session['proy_params']
     main_field = request.session['main']
-    var2 = request.session['var2']    
+    var2 = request.session['var2']
+    
+    #chequear si no se trara de una salida guardada y reasignar variables    
+    if saved_params:
+        params = saved_params['proy_params']
+        main_field = saved_params['main']
+        var2 = saved_params['var2']
+        
+    query = _get_query(params)
+    resultado = get_object_or_404(Resultado, id=id)    
     dicc = {}    
     relation = Actividad._meta.get_field_by_name(main_field)[0].rel.to    
     opts = relation.objects.all()    
@@ -91,6 +100,11 @@ def output(request, id):
                 suma = qs.aggregate(campo_sum=Sum(foo))['campo_sum']
                 dicc[meh][foo] = suma or 0
                 
+    #si es una salida guardada retornar valores aqui         
+    if saved_params:
+        return locals()    
+    
+    """Aca inicia el guardado de la la salida, generamiento de url y reporte"""
     url = request.GET.get('url', '')
     comment = request.GET.get('comment', '')
     save = request.GET.get('save', '')
@@ -100,9 +114,9 @@ def output(request, id):
         params['main'] = request.session['main']
         params['var2'] = request.session['var2']
         params['proy_params'] = request.session['proy_params']
-        params['total'] = True if 'total' in request.session else False
-        params['bar_graph'] = True if 'bar_graph' in request.session else False
-        params['pie_graph'] = True if 'pie_graph' in request.session else False
+        params['total'] = True if request.session['total'] else False
+        params['bar_graph'] = True if request.session['bar_graph'] else False
+        params['pie_graph'] = True if request.session['pie_graph'] else False
         params['resultado__id'] = resultado.id
         
         obj, created = Output.objects.get_or_create(params=str(params),
@@ -118,7 +132,13 @@ def output(request, id):
                             
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 
-
+def shortview(request, hash):
+    saved_out = get_object_or_404(Output, id=short.decode_url(hash))
+    #obteniendo los parametros de la salida guardada o compartida y luego el query
+    variables = output(request, eval(saved_out.params)['resultado__id'], eval(saved_out.params))
+    variables['noshare'] = True       
+    
+    return render_to_response('contraparte/output.html', RequestContext(request, variables))
 
 
 

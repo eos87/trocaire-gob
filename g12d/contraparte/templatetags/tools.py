@@ -11,15 +11,17 @@ def load_table(dicc, opts2, request, tipo):
             'tipo': tipo}
     
 @register.inclusion_tag('contraparte/bar_graph.html')
-def bar_graph(dicc, request, tipo):    
+def bar_graph(dicc, var2, main_field, tipo):    
     return { 'dicc' : dicc,
-            'request': request,
+            'var2': var2,
+            'main_field': main_field,
             'tipo': tipo}
     
 @register.inclusion_tag('contraparte/pie_graph.html')
-def pie_graph(dicc, request, tipo):    
+def pie_graph(dicc, var2, main_field, tipo):    
     return { 'dicc' : dicc,
-            'request': request,
+            'var2': var2,
+            'main_field': main_field,
             'tipo': tipo}
 
 #---------- end inclusion tags ---------------

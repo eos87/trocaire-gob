@@ -7,13 +7,14 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'g12d.views.home', name='home'),
+    url(r'^$', 'g12d.views.home', name='home'),    
     url(r'^xls/$', 'g12d.utils.save_as_xls', name='save_xls' ),
-    url(r'^fillout/$', include('formutils.urls')),
+    url(r'^fillout/', include('formutils.urls')),
     url(r'^proyecto/', include('contraparte.urls')),    
     
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^(?P<hash>\w+)$', 'g12d.contraparte.views.shortview', name='shortview'),
 )
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
