@@ -27,8 +27,11 @@ class FormFKAutoFill(forms.Form):
                 load_key = val['on_change']['field']
                 if raw_data[select_key]:
                     selected_items[select_key] = raw_data[select_key]
-                if raw_data[load_key]:
-                    load_items[load_key] = raw_data[load_key]        
+                try:
+                    if raw_data[load_key]:
+                        load_items[load_key] = raw_data[load_key]
+                except:
+                    pass                
                                                      
         return Foo(foo=a, selected_items=selected_items, load_items=load_items)
     

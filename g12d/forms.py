@@ -19,18 +19,30 @@ MONTH_CHOICES = (('', 'Mes'),
 ANIOS_CHOICE = (('', u'Año'), (2010, 2010), (2011, 2011), (2012, 2012), )
 
 class ProyectoForm(FormFKAutoFill):
-    organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all())
-    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all())    
-    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, error_messages={'required': 'Seleccione al menos un mes'}, required=False)    
-    anio = forms.ChoiceField(choices=ANIOS_CHOICE, error_messages={'required': u'Seleccione un año'}, required=False, label=u'Año')
-#    departamento = forms.ModelChoiceField(queryset=Departamento.objects.all())
-#    municipio = forms.ModelChoiceField(queryset=Municipio.objects.all())
-    
+    organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all(), 
+                                          widget=forms.Select(attrs={'class':'form-large'}))
+    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all(), 
+                                      widget=forms.Select(attrs={'class':'form-large'}))
+    resultado = forms.ModelChoiceField(queryset=Resultado.objects.all(), 
+                                      widget=forms.Select(attrs={'class':'form-large'}))       
+    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, 
+                                      error_messages={'required': 'Seleccione al menos un mes'}, 
+                                      required=False, 
+                                      widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))    
+    anio = forms.ChoiceField(choices=ANIOS_CHOICE, 
+                             error_messages={'required': u'Seleccione un año'}, 
+                             required=False, 
+                             label=u'Año', 
+                             widget=forms.Select(attrs={'class':'form-large'}))  
     
     class Foo:
         config = [{'on_change': {'field': 'organizacion'},
                    'fill': {'field': 'proyecto', 'model': 'Proyecto', 'app_label': 'contraparte'},
-                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}},]
+                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}},
+                  {'on_change': {'field': 'proyecto'},
+                   'fill': {'field': 'resultado', 'model': 'Resultado', 'app_label': 'contraparte'},
+                   'values': {'filter': 'proyecto', 'regress': 'id,nombre_corto'}},
+                  ]
 
 #--- parametros para creacion del form de cruces ----
 first_class = {'tipo_actividad': ['tipo_actividad'], 

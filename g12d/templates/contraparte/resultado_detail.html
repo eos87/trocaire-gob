@@ -19,9 +19,29 @@
 		$('.recursos').attr("disabled", true);
 	});
 </script>
+<style>
+.banner-filtros{	
+	height: 60px;
+	margin-top: -5px;
+	border-top: 6px #fff solid;	
+}
+</style>
 {% endblock %}
 
 {% block content %}
+<div class="selectedfilters">
+	<div class="filtroselect">
+		Organización<br>
+		<span>Simas</span>
+	</div>
+	<div class="filtroselect">
+		Proyecto<br>
+		<span>Nombre del proyecto, Nombre del proyecto</span>
+	</div>
+	<div class="clean"></div>		
+</div>
+<div class="banner banner-filtros">	
+</div>
 <div id="subfiltros">
 	<form action="." method="post">
 	{% csrf_token %}
