@@ -11,9 +11,17 @@
 <script type="text/javascript" src="/files/js/highcharts.js"></script>
 <script type="text/javascript" src="/files/js/exporting_patched.js"></script>
 <script type='text/javascript' src='/files/js/jquery.tipsy.js'></script>
+<script type='text/javascript' src='/files/js/tabs.js'></script>
 <link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
+<link rel="stylesheet" href="/files/css/tabs.css" type="text/css" />
 
-
+<style>
+.banner-filtros{	
+	height: 60px;
+	margin-top: -5px;
+	border-top: 6px #fff solid;	
+}
+</style>
 <script type="text/javascript">
 	$(document).ready(function(){
 		{% if not noshare %}
@@ -28,15 +36,19 @@
 			
 		});
 		{% endif %}
-	});
-	
+	});	
 	$(function() {
 	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'w'});
-	 });
+	});
 </script>
 {% endblock %}
 
 {% block content %}
+{% include "filtros_selectos.html" %}
+<div class="banner banner-filtros">
+	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}}</center>	
+</div>
+
 {% if not noshare %}
 <a href="#" id="share">Compartir</a> | <a href="#" id="sharesave">Guardar para informe</a><br>
 <div id="copiador" style="display: none;">
@@ -45,19 +57,37 @@
 </div>
 {% endif %}
 
-<h3>{{var2.1|unslugify}} por {{main_field|unslugify}}</h3>
 {% load_table dicc opts2 var2 main_field tipo %}
 <br>
-
-{% if request.session.bar_graph or saved_params.bar_graph %}
-<hr>
-{% bar_graph dicc var2 main_field tipo %}
-{% endif %}
-
-<br>
-{% if request.session.pie_graph %}
-<hr>
-{% pie_graph dicc var2 main_field tipo %}
-{% endif %}
-
+<div class="contenedortabs">
+	<ul class="tabs">
+		<li class="active"><a href="#detalle">Detalle</a></li>
+		{% if request.session.bar_graph or saved_params.bar_graph %}
+		<li><a href="#bargraph">Grafico de barra</a></li>
+		{% endif %}
+		{% if request.session.pie_graph %}
+		<li><a href="#piegraph">Grafico de pastel</a></li>
+		{% endif %}
+	</ul> 
+	<div class="pill-content">	
+		<div class="active" id="detalle">
+			asdfasdf
+		</div>
+		{% if request.session.bar_graph or saved_params.bar_graph %}
+		<div id="bargraph">
+			{% bar_graph dicc var2 main_field tipo %}
+		</div>
+		{% endif %}	
+		{% if request.session.pie_graph %}
+		<div id="piegraph">		
+			{% pie_graph dicc var2 main_field tipo %}		
+		</div>	
+		{% endif %}	
+	</div>
+</div> 
+<script>
+$(function () {
+	$('.tabs').tabs()
+})
+</script>
 {% endblock %}

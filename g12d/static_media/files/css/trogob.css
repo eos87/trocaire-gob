@@ -265,13 +265,107 @@ a{outline: none; text-decoration: none;}
 		.left(15%);
 		border-right: 1px #d6d6c8 solid;		
 		height: 100%;
-		padding: 15px 20px 0px;
+		padding: 8px 10px 0px;
 		span{
 			.web-font(12px, #77755f);
 			font-weight: normal;
 		}		
 	}	
 }
+.banner_title{
+	font-family: Arial, sans-serif;
+	color: #4b9ead;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 60px;
+}
+/*-------------- CSS para formulario de cruce de variables ----------------------*/
+#subfiltros ul{
+	list-style: none;
+	padding: 0px;	
+	display: block;
+	float: left;			
+	margin: 0px;
+	margin-left: 14px;
+	border-bottom: 1px #e3e3e3 solid;
+	.box-shadow(0, 1px, 2px, 0.4);
+	.ibutton-container{
+		float: right;				
+	}	
+	li{
+		clear: both;
+		display: block;
+		width: 240px;
+		height: 30px;
+		line-height: 30px;		
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		color: #686868;
+		padding: 5px;		
+		background-color: #f9f9f9;
+		border-top: 1px #e3e3e3 solid;
+		border-left: 1px #e3e3e3 solid;
+		border-right: 1px #e3e3e3 solid;
+	}		
+}
+.varname{
+	.web-font(16px, #717881);
+	padding-left: 12px;
+	line-height: 11px;
+	float: left;						
+	background: url(/files/img/org-img.png) no-repeat;
+	margin: 15px 0px 15px 15px;			
+}
+.grid{
+	.left(285px);
+	margin: 20px 15px;	
+	div.span1{
+		.web-font(15px, #d51c5b);		
+		margin-bottom: 3px;		
+		b{
+			background-color: #d51c5b;
+			color: #fff;
+			display: inline-block;			
+			width: 20px;
+			height: 20px;			
+			.rounded-corners(20px);
+			line-height: 20px;
+			text-align: center;
+		}
+	}	
+}
+.x1{	
+	border: 1px #787878 dashed;
+	padding-bottom: 20px;
+}
+.grid_x2{
+	width: 312px;
+	margin: 0px;
+	margin: 20px 0px; 
+	li{
+		width: 270px !important;
+	}
+}
+.opciones{ 
+	label{
+		color: #686868;
+	    font-family: Arial,sans-serif;
+	    font-size: 14px;
+	    line-height: 30px;
+	}
+	input{
+		margin-left: 15px;	
+	}	    
+}
+.contenedortabs{
+	padding: 7px;
+}
+ul.tabs li.active{
+	.web-font(15px, #d51c5b);
+}
+
+
+/*--------------------- Fin formulario cruce variables --------------------------*/
 
 /*------------------------------ CSS para TABLAS --------------------------------*/
 .result_table caption {
@@ -317,8 +411,4 @@ a{outline: none; text-decoration: none;}
 	background: #fff !important;
 	border-color: #c6c6c6 !important;
 	color: #666 !important;
-}
-label{
-	float: left;
-	padding-right: 20px;
 }

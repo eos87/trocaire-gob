@@ -74,9 +74,9 @@ class SubFiltroForm(forms.Form):
     evaluacion = forms.ChoiceField(choices=to_choices(evaluacion.keys()), 
                                    widget=RadioSelect(attrs={'class':'unique'}),
                                    required=False)
-    recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
-                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
-                                 required=False)
+#    recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
+#                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
+#                                 required=False)
     total = forms.BooleanField(required=False, label=u"Ver totales")
     bar_graph = forms.BooleanField(required=False, label=u"Gráfico de barras")
     pie_graph = forms.BooleanField(required=False, label=u"Gráfico de pastel")
@@ -94,8 +94,7 @@ class SubFiltroForm(forms.Form):
             
         if (participantes and evaluacion) or (participantes and recursos) or (evaluacion and recursos):
             #validando que solo se elija una segunda variable         
-            raise forms.ValidationError("Solo puede seleccionar una segunda variable")
-                            
+            raise forms.ValidationError("Solo puede seleccionar una segunda variable")                            
         
         return cleaned_data        
 
