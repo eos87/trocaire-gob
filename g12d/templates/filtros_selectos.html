@@ -1,12 +1,36 @@
+{% load tools %}
+
 <div class="selectedfilters" id="barrafiltros">
 	<div class="filtroselect">
 		Organización<br>
-		<span>Simas</span>
-	</div>
+		<span>
+			{% for org in filtro.organizacion %}
+			{{org.nombre_corto}}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+		</span>
+	</div>	
 	<div class="filtroselect">
 		Proyecto<br>
-		<span>Nombre del proyecto, Nombre del proyecto</span>
+		<span>
+			{% for proy in filtro.proyecto %}
+			{{proy}}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+		</span>
 	</div>
+	<div class="filtroselect">
+		Meses<br>
+		<span>
+			{% for mes in filtro.meses %}
+			{{mes|month_name}}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+		</span>
+	</div>
+	{% if filtro.year %}
+	<div class="filtroselect">		
+		Año<br>
+		<span>{{filtro.year}}</span>
+	</div>
+	{% endif %}
 	<div class="clean"></div>		
 </div>
 <script type="text/javascript">

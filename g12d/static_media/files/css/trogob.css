@@ -262,7 +262,9 @@ a{outline: none; text-decoration: none;}
 		font-weight: bold;
 		font-size: 13px;
 		font-family: Arial, sans-serif;
-		.left(15%);
+		float: left;
+		min-width: 30px;
+		max-width: 150px;
 		border-right: 1px #d6d6c8 solid;		
 		height: 100%;
 		padding: 8px 10px 0px;
@@ -359,41 +361,78 @@ a{outline: none; text-decoration: none;}
 }
 .contenedortabs{
 	padding: 7px;
+	min-height: 200px;
 }
-ul.tabs li.active{
-	.web-font(15px, #d51c5b);
+ul.tabs li{
+	a{.web-font(15px, #6c4e58);}
+	&.active a{
+		.web-font(15px, #d51c5b);
+		&:hover{.web-font(15px, #d51c5b);}
+	}
 }
-
-
-/*--------------------- Fin formulario cruce variables --------------------------*/
+.tablegatito{
+	width: 960px;
+	margin-bottom: 15px;
+	padding-top: 5px;
+	.dinamictable{
+		float: left;
+		width: 600px;
+		overflow: hidden;
+		overflow-x: auto; 
+	}
+	.tableoptions{
+		float: left;
+		width: 360px;
+		margin-top: 10px;
+	}	
+}
+#clippy_117{
+	.rounded-corners(3px);
+	border: 1px solid #ccc;
+	display: inline-block;
+	padding: 1px 5px;
+	margin-top: 10px;
+	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;	
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	color: #333;
+}
 
 /*------------------------------ CSS para TABLAS --------------------------------*/
+.result_table{
+	margin-right: 5px;
+}
 .result_table caption {
 	text-align: left;
 	font-size: 15px;
 	color: #8c8f3d;
-	font-family: Trebuchet MS, Verdana, sans-serif;
+	font-family: Trebuchet MS, Verdana, sans-serif;	
 	padding-left: 13px;
 	padding-top: 5px;
 }
-.result_table th {
-	font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	font-size: 11px;
-	text-align: center;
-	color: #069;
-	border-right: 1px solid #ded3ba;
-	border-bottom: 1px solid #ded3ba;
-	letter-spacing: 1px;
-	text-transform: uppercase;	
-	padding: 10px 5px 4px 12px;
-	background: #EDEBEA url(/files/images/bg_header.png) repeat-x;
+.result_table th {	
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), color-stop(25%, #DEDBCB), to(#DEDBCB));
+	background-image: -webkit-linear-gradient(#eee, #eee 25%, #DEDBCB);
+	background-image: -moz-linear-gradient(top, #eee 25%, #DEDBCB);
+	background-image: -ms-linear-gradient(#eee, #eee 25%, #DEDBCB);
+	background-image: -o-linear-gradient(#eee, #eee 25%, #DEDBCB);
+	background-image: linear-gradient(#eee, #eee 25%, #DEDBCB);
+	
+	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;	
+	text-align: center;	
+	color: #333; 	 
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;	
+	padding: 5px;
+	text-shadow: 1px 1px 0px #fff;
 	vertical-align: middle;
 }
 .result_table td {
-	font: normal 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	border-right: 1px solid #E0DDD2;
-	border-bottom: 1px solid #E0DDD2;
+	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;
+/* 	font: normal 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; */
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	padding: 6px 12px 6px 12px;
 	color: #696969;
 	background: #FFFFFF;

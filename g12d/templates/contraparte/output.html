@@ -14,7 +14,7 @@
 <script type='text/javascript' src='/files/js/tabs.js'></script>
 <link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
 <link rel="stylesheet" href="/files/css/tabs.css" type="text/css" />
-
+<link rel="stylesheet" href="/files/css/buttons.css" type="text/css" />
 <style>
 .banner-filtros{	
 	height: 60px;
@@ -48,25 +48,33 @@
 <div class="banner banner-filtros">
 	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}}</center>	
 </div>
-
-{% if not noshare %}
-<a href="#" id="share">Compartir</a> | <a href="#" id="sharesave">Guardar para informe</a><br>
-<div id="copiador" style="display: none;">
-	<span id="clippy_117"></span>
-	{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+<div class="tablegatito">
+	<div class="dinamictable">
+		{% load_table dicc opts2 var2 main_field total tipo %}
+	</div>
+	<div class="tableoptions" id="tableoptions">
+		<a class="guardarXLS optionsbutton" href="#" onclick="exportarXLS('result_table'); return false;">Exportar <img src="/files/img/xls.png" alt=":D"></a>
+		{% if not noshare %}
+		<a href="#" id="share" class="optionsbutton">Compartir <img src="/files/img/share.png" alt=":D"></a>
+		<a href="#" id="sharesave" class="optionsbutton">Guardar para informe <img src="/files/img/save.png" alt=":D"></a><br>
+		<div id="copiador" style="display: none;">
+			<span id="clippy_117"></span>
+			{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+		</div>
+		{% endif %}
+	</div>
+	<div class="clean"></div>	
 </div>
-{% endif %}
 
-{% load_table dicc opts2 var2 main_field tipo %}
-<br>
+
 <div class="contenedortabs">
 	<ul class="tabs">
 		<li class="active"><a href="#detalle">Detalle</a></li>
 		{% if request.session.bar_graph or saved_params.bar_graph %}
-		<li><a href="#bargraph">Grafico de barra</a></li>
+		<li><a href="#bargraph">Gráfico de barra</a></li>
 		{% endif %}
 		{% if request.session.pie_graph %}
-		<li><a href="#piegraph">Grafico de pastel</a></li>
+		<li><a href="#piegraph">Gráfico de pastel</a></li>
 		{% endif %}
 	</ul> 
 	<div class="pill-content">	

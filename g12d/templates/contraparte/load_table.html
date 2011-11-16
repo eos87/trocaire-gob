@@ -1,13 +1,11 @@
 {% load tools %}
-
-<a class="guardarXLS" href="#" onclick="exportarXLS('result_table'); return false;">Exportar a XLS</a>
 <div id="result_table">
 	<table class="result_table">
 		<thead>			
 			<tr>
 				<th rowspan="2">{{main_field|unslugify}}</th>
 				<th colspan="{{opts2|length}}">{{var2.1|unslugify}}</th>
-				{% if request.session.total %}
+				{% if total %}
 				<th rowspan="2">Total</th>
 				{% endif %}				
 			</tr>
@@ -32,7 +30,7 @@
 					<td>{{value|get_value:k}}</td>
 					{% endif %}
 				{% endfor %}
-				{% if request.session.total %}
+				{% if total %}
 					{% if tipo == 'choice' %}
 					<td>{{value|total_dict_query}}</td>
 					{% else %}
@@ -41,7 +39,7 @@
 				{% endif %}
 			</tr>			
 			{% endfor %}
-			{% if request.session.total %}
+			{% if total %}
 			<tr>
 				<td><b>Total</b></td>
 				{% for k in opts2 %}  

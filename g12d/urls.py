@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^(?P<hash>\w+)$', 'g12d.contraparte.views.shortview', name='shortview'),
+    url(r'^i/(?P<hash>\w+)$', 'g12d.contraparte.views.shortview', name='shortview'),
 )
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

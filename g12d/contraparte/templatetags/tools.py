@@ -4,11 +4,12 @@ register = template.Library()
 
 #-------- begin inclusion tags ------------
 @register.inclusion_tag('contraparte/load_table.html')
-def load_table(dicc, opts2, var2, main_field, tipo):    
+def load_table(dicc, opts2, var2, main_field, total, tipo):    
     return { 'dicc' : dicc,
             'opts2': opts2,
             'var2': var2,
             'main_field': main_field,
+            'total': total,
             'tipo': tipo}
     
 @register.inclusion_tag('contraparte/bar_graph.html')
@@ -63,4 +64,13 @@ def total_general(tabla, qs=None):
     if qs==1:
         return sum([sum(len(a) for a in value.values()) for value in tabla.values()])       
     return sum([sum(value.values()) for value in tabla.values()]) 
+
+MESES = {1: 'Ene', 2: 'Feb', 3: 'Mar',
+         4: 'Abr', 5: 'May', 6: 'Jun',
+         7: 'Jul', 8: 'Ago', 9: 'Sep',
+         10: 'Oct', 11: 'Nov', 12: 'Dic'}
+
+@register.filter
+def month_name(month_number):    
+    return MESES[int(month_number)]
 
