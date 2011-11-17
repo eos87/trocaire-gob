@@ -2,13 +2,20 @@
 
 <div class="selectedfilters" id="barrafiltros">
 	<div class="filtroselect">
+		Tipo de salida<br>
+		<span>
+			{{filtro.salida}}
+		</span>
+	</div>
+	<div class="filtroselect">
 		Organización<br>
 		<span>
 			{% for org in filtro.organizacion %}
 			{{org.nombre_corto}}{% if not forloop.last %}, {% endif %}
 			{% endfor %}
 		</span>
-	</div>	
+	</div>
+	{% if filtro.proyecto %}	
 	<div class="filtroselect">
 		Proyecto<br>
 		<span>
@@ -17,7 +24,9 @@
 			{% endfor %}
 		</span>
 	</div>
-	<div class="filtroselect">
+	{% endif %}
+	{% if filtro.meses %}
+	<div class="filtroselect">		
 		Meses<br>
 		<span>
 			{% for mes in filtro.meses %}
@@ -25,6 +34,7 @@
 			{% endfor %}
 		</span>
 	</div>
+	{% endif %}
 	{% if filtro.year %}
 	<div class="filtroselect">		
 		Año<br>

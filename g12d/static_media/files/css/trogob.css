@@ -429,13 +429,20 @@ ul.tabs li{
 	vertical-align: middle;
 }
 .result_table td {
-	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;
-/* 	font: normal 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; */
+/* 	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif; */
+	font: normal 13px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	padding: 6px 12px 6px 12px;
+	border-bottom: 1px solid #ccc;	
 	color: #696969;
 	background: #FFFFFF;
+	span{
+		padding: 6px 12px;
+		display: block;		
+	}	
+	span.activa:hover{
+		cursor: pointer;
+		background: #dce6e8;		
+	}
 }
 .ui-multiselect[type="button"]{
 	background: #fafafa !important;

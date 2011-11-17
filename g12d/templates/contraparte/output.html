@@ -70,10 +70,10 @@
 <div class="contenedortabs">
 	<ul class="tabs">
 		<li class="active"><a href="#detalle">Detalle</a></li>
-		{% if request.session.bar_graph or saved_params.bar_graph %}
+		{% if request.session.bar_graph or bar_graph %}
 		<li><a href="#bargraph">Gráfico de barra</a></li>
 		{% endif %}
-		{% if request.session.pie_graph %}
+		{% if request.session.pie_graph or pie_graph %}
 		<li><a href="#piegraph">Gráfico de pastel</a></li>
 		{% endif %}
 	</ul> 
@@ -81,12 +81,12 @@
 		<div class="active" id="detalle">
 			asdfasdf
 		</div>
-		{% if request.session.bar_graph or saved_params.bar_graph %}
+		{% if request.session.bar_graph or bar_graph %}
 		<div id="bargraph">
 			{% bar_graph dicc var2 main_field tipo %}
 		</div>
 		{% endif %}	
-		{% if request.session.pie_graph %}
+		{% if request.session.pie_graph or pie_graph %}
 		<div id="piegraph">		
 			{% pie_graph dicc var2 main_field tipo %}		
 		</div>	

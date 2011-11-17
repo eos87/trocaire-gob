@@ -40,16 +40,11 @@ $(document).ready(function(){
 		<center>		
 		<form action="." method="post" class="form">
 			{% csrf_token %}
-			<table>		
+			<table>
 				{{form.as_table}}
 			</table>
 			<input class="form-button" type="submit" value="Consultar" />	
-		</form>
-		<div>		
-		{% for result in resultados %}
-		<a href="/proyecto/resultado/{{result.id}}/">{{result.nombre_corto}}</a>
-		{% endfor %}
-		</div>
+		</form>		
 		</center>
 	</div>
 </div>

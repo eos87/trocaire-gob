@@ -43,6 +43,14 @@ class ProyectoForm(FormFKAutoFill):
                    'fill': {'field': 'resultado', 'model': 'Resultado', 'app_label': 'contraparte'},
                    'values': {'filter': 'proyecto', 'regress': 'id,nombre_corto'}},
                   ]
+        
+class ProgramaForm(forms.Form):
+    organizaciones = forms.ModelMultipleChoiceField(queryset=Organizacion.objects.all(), widget=forms.SelectMultiple(attrs={'style':'width: 320px'})) 
+    proyectos = forms.ModelMultipleChoiceField(queryset=Proyecto.objects.all(), required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
+    resultado = forms.ModelChoiceField(queryset=ResultadoPrograma.objects.all(), widget=forms.Select(attrs={'class':'form-large'}))
+    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
+    anio = forms.ChoiceField(choices=ANIOS_CHOICE, required=False, label=u'Año', widget=forms.Select(attrs={'class':'form-large'}))
+    
 
 #--- parametros para creacion del form de cruces ----
 first_class = {'tipo_actividad': ['tipo_actividad'], 
