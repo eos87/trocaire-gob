@@ -183,8 +183,3 @@ def shortview(request, hash):
         variables[key] = params[key]
            
     return render_to_response('contraparte/output.html', RequestContext(request, variables))
-
-
-
-
-

@@ -21,6 +21,14 @@ def save_as_xls(request):
     response['Charset'] ='UTF-8'
     return response
 
+def test(request):        
+    response = render_to_response('test.html', {})
+    response['Content-Disposition'] = 'attachment; filename=imagen.doc'
+    response['content-transfer-encoding'] = 'base64'
+    response['Content-Type'] = 'application/msword'
+    response['Charset'] ='UTF-8'
+    return response
+
 def get_proyectos(request):
     ids = request.GET.get('ids', '')
     if ids:
