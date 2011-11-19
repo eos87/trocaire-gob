@@ -148,11 +148,29 @@ def output(request, saved_params=None):
     k = request.GET.get('k', '')
     k2 = request.GET.get('k2', '')
     if k and k2:
-        detail = Actividad.objects.filter(id__in=[a.id for a in dicc[k][k2]]).values('nombre_actividad', 
-                                                                                     'foto1', 'foto2', 'foto3')        
-        return HttpResponse(simplejson.dumps(list(detail)), mimetype="application/json")
+        lista = []
+        for obj in Actividad.objects.filter(id__in=[a.id for a in dicc[k][k2]]):
+            #armar el json a retornar
+            lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_128x96=obj.foto1.url_128x96,
+                          comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
+                          fecha=obj.fecha.strftime('%Y-%m-%d')))               
+        return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
                                
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
+
+#dejo esta funcion solo para explicar como funciona el lambda de abajo XD date2json
+def date_to_json(param):     
+    lista = []        
+    for dicc in param:
+        foo = {}
+        for key, value in dicc.items():
+            if type(value) == datetime.datetime:
+                value = value.strftime('%Y-%m-%dT%H:%M:%S')
+            foo[key] = value
+        lista.append(foo)
+    return lista
+
+date2json = lambda x: map(lambda a: {k:v.strftime('%Y-%m-%dT%H:%M:%S') if type(v) == datetime.datetime else v for k, v in a.items()}, x) 
 
 def shortview(request, hash):
     saved_out = get_object_or_404(Output, id=short.decode_url(hash))    

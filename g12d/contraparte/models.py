@@ -5,7 +5,12 @@ from django.contrib.auth.models import User
 from trocaire.models import *
 from lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey
+from thumbs import ImageWithThumbsField
+from g12d.utils import get_file_path
 import short
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^thumbs\.ImageWithThumbsField"])
 
 SI_NO = ((1, u'Si'), (2, u'No'))
 
@@ -38,7 +43,7 @@ class Resultado(models.Model):
     
     class Meta:
         verbose_name = u'Resultado del proyecto'
-        verbose_name_plural = u'Resultados de proyectos' 
+        verbose_name_plural = u'Resultados del proyecto' 
         
 class Organizador(models.Model):
     nombre = models.CharField(max_length=200)
@@ -120,13 +125,16 @@ class Actividad(models.Model):
     #recursos
     comentarios = models.TextField(blank=True, default='')
     acuerdos = models.TextField(blank=True, default='')
-    foto1 = models.ImageField(upload_to='fotos', blank=True, null=True)
-    foto2 = models.ImageField(upload_to='fotos', blank=True, null=True)
-    foto3 = models.ImageField(upload_to='fotos', blank=True, null=True)
+    #foto1 = models.ImageField(upload_to='fotos', blank=True, null=True)
+    foto1 = ImageWithThumbsField(upload_to=get_file_path, sizes=((128, 96), (640, 480)), blank=True, null=True)   
+    foto2 = ImageWithThumbsField(upload_to=get_file_path, sizes=((128, 96), (640, 480)), blank=True, null=True)
+    foto3 = ImageWithThumbsField(upload_to=get_file_path, sizes=((128, 96), (640, 480)), blank=True, null=True)
     video = models.CharField(max_length=300, blank=True, default='')
     
     mes = models.IntegerField(editable=False)
     year = models.IntegerField(editable=False)
+    
+    fileDir = 'fotos'
     
     def save(self, *args, **kwargs):
         self.mes = self.fecha.month

@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/files/js/exporting_patched.js"></script>
 <script type='text/javascript' src='/files/js/jquery.tipsy.js'></script>
 <script type='text/javascript' src='/files/js/tabs.js'></script>
+<script type='text/javascript' src='/files/js/underscore-min.js'></script>
 <link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
 <link rel="stylesheet" href="/files/css/tabs.css" type="text/css" />
 <link rel="stylesheet" href="/files/css/buttons.css" type="text/css" />
@@ -78,16 +79,15 @@
 		{% endif %}
 	</ul> 
 	<div class="pill-content">	
-		<div class="active" id="detalle">
-			asdfasdf
+		<div class="active" id="detalle">			
 		</div>
 		{% if request.session.bar_graph or bar_graph %}
-		<div id="bargraph">
+		<div id="bargraph"><br>
 			{% bar_graph dicc var2 main_field tipo %}
 		</div>
 		{% endif %}	
 		{% if request.session.pie_graph or pie_graph %}
-		<div id="piegraph">		
+		<div id="piegraph"><br>
 			{% pie_graph dicc var2 main_field tipo %}		
 		</div>	
 		{% endif %}	

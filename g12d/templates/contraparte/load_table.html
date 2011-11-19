@@ -60,9 +60,19 @@
 </div>
 
 <script type="text/javascript">
+	
 function loadCell(key, key2){
 	$.getJSON('?k='+key+'&k2='+key2, function(data){
-		console.log(data);
+		if(data){$('#detalle').html('');}
+		_.each(data, function(obj){			
+			var actividad = "<div class='actividad'><div class='data'>\
+			<span>"+obj.nombre_actividad+"</span><span class='lugar'><b>"+obj.comunidad__nombre+", "+obj.municipio__nombre+"</b></span>\
+			<span class='fecha'><b>"+obj.fecha+"</b></span></div><div class='media'>"
+			if(obj.foto1_128x96){actividad+="<img src='"+obj.foto1_128x96+"' alt='"+obj.nombre_actividad+"'>";}
+			actividad+="</div><div class='clean'></div>";
+			console.log(actividad);
+			$(actividad).appendTo($('#detalle'));
+		});
 	});
 }
 </script>
