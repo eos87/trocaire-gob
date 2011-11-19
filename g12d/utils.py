@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from contraparte.models import *
+from g12d.contraparte.models import *
 from django.utils import simplejson
 import os
 import re
@@ -40,8 +40,9 @@ def get_proyectos(request):
                                                                                            'organizacion__nombre_corto', 
                                                                                            'codigo')
             print proyectos
-        except:
-            return HttpResponse(':(')
+        except Exception as e:
+            print e
+            return HttpResponse(e)
     else:
         return HttpResponse(':(')
     return HttpResponse(simplejson.dumps(list(proyectos)), mimetype="application/json")

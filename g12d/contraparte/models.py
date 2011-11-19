@@ -6,7 +6,7 @@ from trocaire.models import *
 from lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey
 from thumbs import ImageWithThumbsField
-from g12d.utils import get_file_path
+from utils import get_file_path
 import short
 
 from south.modelsinspector import add_introspection_rules
