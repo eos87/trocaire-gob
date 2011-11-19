@@ -16,21 +16,41 @@ MONTH_CHOICES = (('', 'Mes'),
                  (9, 'Septiembre'), (10, 'Octubre'),
                  (11, 'Noviembre'), (12, 'Diciembre'))
 
-ANIOS_CHOICE = (('', u'Año'), (2010, 2010), (2011, 2011), (2012, 2012), )
+ANIOS_CHOICE = (('', u'Año'), (2011, 2011), (2012, 2012), )
 
 class ProyectoForm(FormFKAutoFill):
-    organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all())
-    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all())    
-    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, error_messages={'required': 'Seleccione al menos un mes'}, required=False)    
-    anio = forms.ChoiceField(choices=ANIOS_CHOICE, error_messages={'required': u'Seleccione un año'}, required=False, label=u'Año')
-#    departamento = forms.ModelChoiceField(queryset=Departamento.objects.all())
-#    municipio = forms.ModelChoiceField(queryset=Municipio.objects.all())
-    
+    organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all(), 
+                                          widget=forms.Select(attrs={'class':'form-large'}))
+    proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all(), 
+                                      widget=forms.Select(attrs={'class':'form-large'}))
+    resultado = forms.ModelChoiceField(queryset=Resultado.objects.all(), 
+                                      widget=forms.Select(attrs={'class':'form-large'}))       
+    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, 
+                                      error_messages={'required': 'Seleccione al menos un mes'}, 
+                                      required=False, 
+                                      widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))    
+    anio = forms.ChoiceField(choices=ANIOS_CHOICE, 
+                             error_messages={'required': u'Seleccione un año'}, 
+                             required=False, 
+                             label=u'Año', 
+                             widget=forms.Select(attrs={'class':'form-large'}))  
     
     class Foo:
         config = [{'on_change': {'field': 'organizacion'},
                    'fill': {'field': 'proyecto', 'model': 'Proyecto', 'app_label': 'contraparte'},
-                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}},]
+                   'values': {'filter': 'organizacion', 'regress': 'id,nombre'}},
+                  {'on_change': {'field': 'proyecto'},
+                   'fill': {'field': 'resultado', 'model': 'Resultado', 'app_label': 'contraparte'},
+                   'values': {'filter': 'proyecto', 'regress': 'id,nombre_corto'}},
+                  ]
+        
+class ProgramaForm(forms.Form):
+    organizaciones = forms.ModelMultipleChoiceField(queryset=Organizacion.objects.all(), widget=forms.SelectMultiple(attrs={'style':'width: 320px'})) 
+    proyectos = forms.ModelMultipleChoiceField(queryset=Proyecto.objects.all(), required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
+    resultado = forms.ModelChoiceField(queryset=ResultadoPrograma.objects.all(), widget=forms.Select(attrs={'class':'form-large'}))
+    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
+    anio = forms.ChoiceField(choices=ANIOS_CHOICE, required=False, label=u'Año', widget=forms.Select(attrs={'class':'form-large'}))
+    
 
 #--- parametros para creacion del form de cruces ----
 first_class = {'tipo_actividad': ['tipo_actividad'], 
@@ -62,9 +82,9 @@ class SubFiltroForm(forms.Form):
     evaluacion = forms.ChoiceField(choices=to_choices(evaluacion.keys()), 
                                    widget=RadioSelect(attrs={'class':'unique'}),
                                    required=False)
-    recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
-                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
-                                 required=False)
+#    recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
+#                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
+#                                 required=False)
     total = forms.BooleanField(required=False, label=u"Ver totales")
     bar_graph = forms.BooleanField(required=False, label=u"Gráfico de barras")
     pie_graph = forms.BooleanField(required=False, label=u"Gráfico de pastel")
@@ -82,8 +102,7 @@ class SubFiltroForm(forms.Form):
             
         if (participantes and evaluacion) or (participantes and recursos) or (evaluacion and recursos):
             #validando que solo se elija una segunda variable         
-            raise forms.ValidationError("Solo puede seleccionar una segunda variable")
-                            
+            raise forms.ValidationError("Solo puede seleccionar una segunda variable")                            
         
         return cleaned_data        
 

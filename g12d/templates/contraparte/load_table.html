@@ -1,13 +1,11 @@
 {% load tools %}
-
-<a class="guardarXLS" href="#" onclick="exportarXLS('result_table'); return false;">Exportar a XLS</a>
 <div id="result_table">
 	<table class="result_table">
 		<thead>			
 			<tr>
-				<th rowspan="2">{{request.session.main|unslugify}}</th>
-				<th colspan="{{opts2|length}}">{{request.session.var2.1|unslugify}}</th>
-				{% if request.session.total %}
+				<th rowspan="2">{{main_field|unslugify}}</th>
+				<th colspan="{{opts2|length}}">{{var2.1|unslugify}}</th>
+				{% if total %}
 				<th rowspan="2">Total</th>
 				{% endif %}				
 			</tr>
@@ -24,38 +22,47 @@
 		<tbody>
 			{% for key, value in dicc.items %}
 			<tr>
-				<td>{{key}}</td>
+				<td><span>{{key}}</span></td>
 				{% for k in opts2 %}
 					{% if tipo == 'choice' %}
-					<td>{{value|get_value:k.1|length}}</td>
+					<td><span class="activa" onclick="loadCell('{{key}}', '{{k.1}}');">{{value|get_value:k.1|length}}</span></td>
 					{% else %}
-					<td>{{value|get_value:k}}</td>
+					<td><span>{{value|get_value:k}}</span></td>
 					{% endif %}
 				{% endfor %}
-				{% if request.session.total %}
+				{% if total %}
 					{% if tipo == 'choice' %}
-					<td>{{value|total_dict_query}}</td>
+					<td><span>{{value|total_dict_query}}</span></td>
 					{% else %}
-					<td>{{value|total_dict}}</td>
+					<td><span>{{value|total_dict}}</span></td>
 					{% endif %}
 				{% endif %}
 			</tr>			
 			{% endfor %}
-			{% if request.session.total %}
+			{% if total %}
 			<tr>
-				<td><b>Total</b></td>
+				<td><span><b>Total</b></span></td>
 				{% for k in opts2 %}  
-                <td>{% if tipo == 'choice' %}{{dicc|total_per_query_key:k.1}}{% else %}{{dicc|total_per_key:k}}{% endif %}</td>
+                <td><span>{% if tipo == 'choice' %}{{dicc|total_per_query_key:k.1}}{% else %}{{dicc|total_per_key:k}}{% endif %}</span></td>
                 {% endfor %}
-                <td>
+                <td><span>
                 {% if tipo == 'choice' %}
                 {{dicc|total_general:1}}
                 {% else %}
                 {{dicc|total_general}}
                 {% endif %}
+                </span>
                 </td>
 			</tr>
 			{% endif %}
 		</tbody>
 	</table>
 </div>
+
+<script type="text/javascript">
+function loadCell(key, key2){
+	$.getJSON('?k='+key+'&k2='+key2, function(data){
+		console.log(data);
+	});
+}
+</script>

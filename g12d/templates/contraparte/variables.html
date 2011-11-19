@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{request.session.salida}}{% endblock %}
+
+{% block extra_head %}
+<style>
+.banner-filtros{	
+	height: 60px;
+	margin-top: -5px;
+	border-top: 6px #fff solid;	
+}
+</style>
+<script type="text/javascript" src="/files/js/underscore-min.js"></script>
+<link href="/files/css/form.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="http://gsgd.co.uk/sandbox/jquery/easing/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="/files/js/jquery.ibutton.min.js"></script>
+<link href="/files/css/jquery.ibutton.min.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+	$(document).ready(function(){		
+		var elems = $('.unique');		
+		$('.unique').click(function(){			
+			_.each(elems, function(num){ 
+				$(num).iButton("toggle", false);
+				$(num).attr('checked', false);				
+			});
+			$(this).attr('checked', true);
+			$(this).iButton("toggle", true);
+		});	
+		$('.recursos').attr("disabled", true);
+	});	
+	$(window).load(function(){
+		$(":radio").iButton({
+			labelOn: "SI"
+			, labelOff: "NO"
+			, easing: 'easeOutBounce'
+			, duration: 400
+		});
+	});
+</script>
+
+{% endblock %}
+
+{% block content %}
+{% include "filtros_selectos.html" %}
+<div class="banner banner-filtros">
+	<center class="banner_title">Combinaciones de variables</center>	
+</div>
+<div id="subfiltros">
+<form action="." method="post">
+	{% csrf_token %}
+	<div class="grid">
+		<div class="span1">PASO <b>1</b></div>
+		<div class="x1">
+			<div class="varname">Variable Principal</div>
+			<div>{{form.main_var}}</div>			
+			<div class="clean"></div>
+		</div>		
+	</div>
+	<div class="grid grid_x2">
+		<div class="span1">PASO <b>2</b></div>
+		<div class="x1">
+			<div class="varname">{{form.participantes.label}}</div>
+			<div>{{form.participantes}}</div>			
+			<div class="varname">{{form.evaluacion.label}}</div>
+			<div>{{form.evaluacion}}</div>
+			<div class="clean"></div>
+		</div>		
+	</div>
+	<div class="grid">
+		<div class="span1">PASO <b>3</b></div>
+		<div class="x1">
+			<div class="varname">Opciones de Visualización</div>
+			<div class="clean opciones">
+			{{form.total}} <label>{{form.total.label}}</label><br>
+			{{form.bar_graph}} <label>{{form.bar_graph.label}}</label><br>
+			{{form.pie_graph}} <label>{{form.pie_graph.label}}</label>
+			</div>			
+			<div class="clean"></div>
+		</div>
+		<br>
+		<div class="span1">PASO <b>4</b></div>
+		<div class="x1">
+			<center><input type="submit" class="form-button" value="Generar tabla" /></center>
+		</div>		
+	</div>
+</form>
+</div>
+{{request.session.var2}}<br>{{request.session.main}}
+{% endblock %}

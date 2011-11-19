@@ -22,7 +22,7 @@ class Proyecto(models.Model):
     municipios = models.ManyToManyField(Municipio)    
     
     def __unicode__(self):
-        return u'%s - %s' % (self.organizacion.nombre_corto, self.codigo)
+        return u'%s-%s' % (self.organizacion.nombre_corto, self.codigo)
     
     class Meta:
         verbose_name_plural = u'Proyectos'

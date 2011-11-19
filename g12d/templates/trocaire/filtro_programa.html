@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Filtros : Por Programa{% endblock %}
+
+{% block extra_head %}
+<link href="/files/css/formee/css/form-structure.css" rel="stylesheet" type="text/css"/>
+<link href="/files/css/formee/css/form-style.css" rel="stylesheet" type="text/css"/>
+<link href="/files/css/jquery.multiselect.css" rel="stylesheet" type="text/css"/>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/files/js/jquery.multiselect.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#id_proyectos").html('');
+	$("#id_meses").multiselect({
+	    noneSelectedText: 'Meses',
+	    selectedText: '# seleccionados',
+	    minWidth: 150	    
+	});	
+	var proyecto = $("#id_proyectos").multiselect({
+	    noneSelectedText: 'Seleccione una...',
+	    selectedText: '# seleccionados',	       
+	});
+	$("#id_organizaciones").multiselect({
+	    noneSelectedText: 'Seleccione una...',
+	    selectedText: '# seleccionados',
+	    beforeclose: function(event, ui){
+            var selectos = $("#id_organizaciones").multiselect("getChecked").map(function(){
+                return this.value;
+            }).get();
+            if(selectos.length!=0){
+                $.getJSON('/ajax/proyectos/?ids='+selectos.join(","), function(data){                	
+                    if(data){                    	
+                    	$('#id_proyectos').html('');                                                                                 
+                        $.each(data, function(i, item){
+                        	$('<option></option>').val(item.id)
+                        	.html(item.organizacion__nombre_corto+'-'+item.codigo)
+                        	.appendTo(proyecto)
+                        });
+                        proyecto.multiselect('refresh');                        
+                    }
+                });
+                proyecto.multiselect("enable");
+            }else{
+                proyecto.multiselect("disable");                
+            }
+        }
+	});
+	proyecto.multiselect("disable");	
+});
+</script>
+<style type="text/css">
+	.content .wrapper{
+		margin-bottom: 50px;
+		margin-top: 15px;
+	}
+	label{
+		float: left;
+		padding-right: 20px;	
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="banner banner-filtros">	
+	<div class="title">Filtros de programa</div>
+</div>
+<div style="width: 960px;">	
+	<div class="formfiltros">			
+		<center>		
+		<form action="." method="post" class="form">
+			{% csrf_token %}
+			<table>
+				{{form.as_table}}
+			</table>
+			<input class="form-button" type="submit" value="Consultar" />	
+		</form>
+		<div>		
+		{% for result in resultados %}
+		<a href="/proyecto/resultado/{{result.id}}/">{{result.nombre_corto}}</a>
+		{% endfor %}
+		</div>
+		</center>
+	</div>
+</div>
+{% endblock %}
