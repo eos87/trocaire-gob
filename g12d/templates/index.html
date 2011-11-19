@@ -47,42 +47,14 @@
 		<div class="index-right">	
 			<div class="title">Organizaciones</div>	
 			<div class="index-list">
+			{% for org in organizaciones %}
 				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
+					<div class="nombre-corto">{{org.nombre_corto|upper}}</div>
+					<div class="nombre-largo">{{org.nombre}}</div>
+					<div class="actcount">{{org.actividad_set.all.count}}</div>
 				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>
-				<div class="index-entry">
-					<div class="nombre-corto">SIMAS</div>
-					<div class="nombre-largo">Sistema de Información Mesoamericano sobre Agricultura Sostenible</div>
-					<div class="actcount">105 actividades</div>
-				</div>					
-			</div>
+			{% endfor %}
+			</div>			
 		</div>
 	</div>
 	<div class="clean"></div>
