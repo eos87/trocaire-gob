@@ -28,7 +28,7 @@ admin.site.register(Organizador)
 class ActividadAdmin(admin.ModelAdmin):
     list_filter = ['nombre_actividad', 'organizacion', 'proyecto', 'persona_organiza', 'fecha']
     search_fields = ['nombre_actividad', 'organizacion__nombre_corto', 'persona_organiza__nombre']
-    list_display = ['nombre_actividad', 'organizacion', 'proyecto', 'fecha', 'resultado']
+    list_display = ['nombre_actividad', 'organizacion__nombre_corto', 'proyecto__codigo', 'fecha', 'resultado__nombre_corto']
     
     fieldsets = [
         (None, {'fields': [('organizacion', 'proyecto'), 'persona_organiza', 'nombre_actividad', 'fecha',
