@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect
 from g12d.contraparte.views import checkParams
 from g12d.forms import *
 
-
 def filtro_programa(request):
     params = {}
     filtro = {}

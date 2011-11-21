@@ -200,3 +200,19 @@ def shortview(request, hash):
         variables[key] = params[key]
            
     return render_to_response('contraparte/output.html', RequestContext(request, variables))
+
+def get_proyectos(request):
+    ids = request.GET.get('ids', '')
+    if ids:
+        try:
+            ids = ids.split(',')
+            proyectos = Proyecto.objects.filter(organizacion__id__in=map(int, ids)).values('id', 
+                                                                                           'organizacion__nombre_corto', 
+                                                                                           'codigo')
+            print proyectos
+        except Exception as e:
+            print e
+            return HttpResponse(e)
+    else:
+        return HttpResponse(':(')
+    return HttpResponse(simplejson.dumps(list(proyectos)), mimetype="application/json")

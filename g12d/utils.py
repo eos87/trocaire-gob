@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
-from django.http import HttpResponse
-from g12d.contraparte.models import *
+from django.http import HttpResponse 
 from django.utils import simplejson
 import os
 import re
@@ -30,23 +29,6 @@ def test(request):
     response['Content-Type'] = 'application/msword'
     response['Charset'] ='UTF-8'
     return response
-
-def get_proyectos(request):
-    ids = request.GET.get('ids', '')
-    if ids:
-        try:
-            ids = ids.split(',')
-            proyectos = Proyecto.objects.filter(organizacion__id__in=map(int, ids)).values('id', 
-                                                                                           'organizacion__nombre_corto', 
-                                                                                           'codigo')
-            print proyectos
-        except Exception as e:
-            print e
-            return HttpResponse(e)
-    else:
-        return HttpResponse(':(')
-    return HttpResponse(simplejson.dumps(list(proyectos)), mimetype="application/json")
-
 
 p = re.compile(r'[^0-9a-zA-Z\._]+')
 
