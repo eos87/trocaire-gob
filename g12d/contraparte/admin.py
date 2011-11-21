@@ -26,26 +26,26 @@ admin.site.register(Resultado)
 admin.site.register(Organizador)
 
 class ActividadAdmin(admin.ModelAdmin):
-#    list_filter = ['nombre_actividad', 'organizacion', 'proyecto', 'persona_organiza', 'fecha']
-#    search_fields = ['nombre_actividad', 'organizacion__nombre_corto', 'persona_organiza__nombre']
-#    list_display = ['nombre_actividad', 'organizacion', 'proyecto', 'fecha', 'resultado']
-#    
-#    fieldsets = [
-#        (None, {'fields': [('organizacion', 'proyecto'), 'persona_organiza', 'nombre_actividad', 'fecha',
-#                           'municipio', 'comunidad']}),
-#        ('Tipo, tema y ejes de actividad', {'fields': ['tipo_actividad', 'tema_actividad', 'ejes_transversales']}),
-#        ('Participantes por sexo', {'fields': [('hombres', 'mujeres'),]}),
-#        ('Participantes por edad', {'fields': [('adultos', 'jovenes', 'ninos', 'no_dato'),]}),
-#        ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres', 'no_dato1'), 
-#                                               ('pobladores', 'estudiantes', 'miembros')]}),
-#        (None, {'fields': ['resultado',]}),
-#        ('Evaluacion', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
-#        ('Recursos', {'fields': [('foto1', 'foto2', 'foto3'), 'video', ('comentarios', 'acuerdos')]}),                                                          
-#    ]
-#    
-#    formfield_overrides = {
-#        models.TextField: {'widget': forms.Textarea(attrs={'cols': 50, 'rows':4, 'class': 'docx'})},        
-#    }
+    list_filter = ['nombre_actividad', 'organizacion', 'proyecto', 'persona_organiza', 'fecha']
+    search_fields = ['nombre_actividad', 'organizacion__nombre_corto', 'persona_organiza__nombre']
+    list_display = ['nombre_actividad', 'organizacion', 'proyecto', 'fecha', 'resultado']
+    
+    fieldsets = [
+        (None, {'fields': [('organizacion', 'proyecto'), 'persona_organiza', 'nombre_actividad', 'fecha',
+                           'municipio', 'comunidad']}),
+        ('Tipo, tema y ejes de actividad', {'fields': ['tipo_actividad', 'tema_actividad', 'ejes_transversales']}),
+        ('Participantes por sexo', {'fields': [('hombres', 'mujeres'),]}),
+        ('Participantes por edad', {'fields': [('adultos', 'jovenes', 'ninos', 'no_dato'),]}),
+        ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres', 'no_dato1'), 
+                                               ('pobladores', 'estudiantes', 'miembros')]}),
+        (None, {'fields': ['resultado',]}),
+        ('Evaluacion', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
+        ('Recursos', {'fields': [('foto1', 'foto2', 'foto3'), 'video', ('comentarios', 'acuerdos')]}),                                                          
+    ]
+    
+    formfield_overrides = {
+        models.TextField: {'widget': forms.Textarea(attrs={'cols': 50, 'rows':4, 'class': 'docx'})},        
+    }
 #    
 #    def get_form(self, request, obj=None, ** kwargs):
 #        if request.user.is_superuser:        
