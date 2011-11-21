@@ -1,6 +1,6 @@
 from django.contrib import admin
 from models import Departamento, Municipio, Comunidad
-from contraparte.models import *
+from g12d.contraparte.models import *
 
 class DepartamentoAdmin(admin.ModelAdmin):
     list_display = ['nombre']
