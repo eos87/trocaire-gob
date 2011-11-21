@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from models import *
+from g12d.contraparte.models import *
 from django import forms
 
 class ResultadoInline(admin.TabularInline):
