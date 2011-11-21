@@ -7,7 +7,7 @@ from g12d.lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey
 from g12d.thumbs import ImageWithThumbsField
 from g12d.utils import get_file_path
-import short
+from g12d import short
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^thumbs\.ImageWithThumbsField"])

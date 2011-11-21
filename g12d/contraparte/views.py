@@ -5,12 +5,11 @@ from django.db.models.loading import get_model
 from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.sites.models import Site
-from g12d.forms import *
-from models import *
-import short
-import datetime
 from django.utils import simplejson
-
+from g12d.forms import *
+from g12d import short
+from models import *
+import datetime
 
 def filtro_proyecto(request):
     proy_params = {}
