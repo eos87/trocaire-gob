@@ -2,8 +2,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from trocaire.models import *
-from lugar.models import Municipio, Comunidad
+from g12d.trocaire.models import *
+from g12d.lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey
 from thumbs import ImageWithThumbsField
 from utils import get_file_path
