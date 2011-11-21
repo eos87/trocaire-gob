@@ -2,8 +2,8 @@
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.http import HttpResponseRedirect
-from contraparte.views import checkParams
-from forms import *
+from g12d.contraparte.views import checkParams
+from g12d.forms import *
 
 
 def filtro_programa(request):

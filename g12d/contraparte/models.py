@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from g12d.trocaire.models import *
 from g12d.lugar.models import Municipio, Comunidad
 from smart_selects.db_fields import ChainedForeignKey
-from thumbs import ImageWithThumbsField
-from utils import get_file_path
+from g12d.thumbs import ImageWithThumbsField
+from g12d.utils import get_file_path
 import short
 
 from south.modelsinspector import add_introspection_rules
