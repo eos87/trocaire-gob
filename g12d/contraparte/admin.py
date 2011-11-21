@@ -46,15 +46,15 @@ class ActividadAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': forms.Textarea(attrs={'cols': 50, 'rows':4, 'class': 'docx'})},        
     }
-#    
-#    def get_form(self, request, obj=None, ** kwargs):
-#        if request.user.is_superuser:        
-#            form = super(ActividadAdmin, self).get_form(request, ** kwargs)
-#        else:
-#            form = super(ActividadAdmin, self).get_form(request, ** kwargs)
-#            form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
-#            #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
-#        return form
+    
+    def get_form(self, request, obj=None, ** kwargs):
+        if request.user.is_superuser:        
+            form = super(ActividadAdmin, self).get_form(request, ** kwargs)
+        else:
+            form = super(ActividadAdmin, self).get_form(request, ** kwargs)
+            form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
+            #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
+        return form
     
     class Media:
         js = ('/files/js/actividad.js', )        
