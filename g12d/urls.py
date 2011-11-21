@@ -11,16 +11,16 @@ urlpatterns = patterns('',
     url(r'^xls/$', 'g12d.utils.save_as_xls', name='save_xls' ),
     url(r'^test/$', 'g12d.utils.test', name='test' ),
     url(r'^ajax/proyectos/$', 'g12d.utils.get_proyectos', name='get_proyectos' ),
-    url(r'^fillout/', include('formutils.urls')),
-    url(r'^proyecto/', include('contraparte.urls')),
-    url(r'^programa/', include('trocaire.urls')),    
+    url(r'^fillout/', include('g12d.formutils.urls')),
+    url(r'^proyecto/', include('g12d.contraparte.urls')),
+    url(r'^programa/', include('g12d.trocaire.urls')),    
     
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^i/(?P<hash>\w+)$', 'g12d.contraparte.views.shortview', name='shortview'),
 )
 
-urlpatterns += patterns('contraparte.views',    
+urlpatterns += patterns('g12d.contraparte.views',    
     url(r'^variables/$', 'variables', name='variables'),
     url(r'^variables/output/$', 'output', name='output'),    
 )
