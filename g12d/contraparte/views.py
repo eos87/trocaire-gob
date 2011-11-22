@@ -150,9 +150,11 @@ def output(request, saved_params=None):
         lista = []
         for obj in Actividad.objects.filter(id__in=[a.id for a in dicc[k][k2]]):
             #armar el json a retornar
-            lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_128x96=obj.foto1.url_128x96,
-                          comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
-                          fecha=obj.fecha.strftime('%Y-%m-%d')))               
+            lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_thumb=obj.foto1.url_128x96,
+                              foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
+                              foto1_pic=obj.foto1.url_640x480, foto2_pic=obj.foto2.url_640x480, foto3_pic=obj.foto3.url_640x480, 
+                              comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
+                              fecha=obj.fecha.strftime('%Y-%m-%d')))               
         return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
                                
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))

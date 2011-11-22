@@ -60,7 +60,11 @@
 </div>
 
 <script type="text/javascript">
-	
+	$(document).ready(function() {
+		$(".fancybox").fancybox();
+	});
+</script>
+<script type="text/javascript">
 function loadCell(key, key2){
 	$.getJSON('?k='+key+'&k2='+key2, function(data){
 		if(data){$('#detalle').html('');}
@@ -68,9 +72,10 @@ function loadCell(key, key2){
 			var actividad = "<div class='actividad'><div class='data'>\
 			<span>"+obj.nombre_actividad+"</span><span class='lugar'><b>"+obj.comunidad__nombre+", "+obj.municipio__nombre+"</b></span>\
 			<span class='fecha'><b>"+obj.fecha+"</b></span></div><div class='media'>"
-			if(obj.foto1_128x96){actividad+="<img src='"+obj.foto1_128x96+"' alt='"+obj.nombre_actividad+"'>";}
-			actividad+="</div><div class='clean'></div>";
-			console.log(actividad);
+			if(obj.foto1_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto1_pic+"'><img src='"+obj.foto1_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
+			if(obj.foto2_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto2_pic+"'><img src='"+obj.foto2_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
+			if(obj.foto3_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto3_pic+"'><img src='"+obj.foto3_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
+			actividad+="</div><div class='clean'></div>";			
 			$(actividad).appendTo($('#detalle'));
 		});
 	});
