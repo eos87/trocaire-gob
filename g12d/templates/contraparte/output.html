@@ -17,11 +17,14 @@
 <script type="text/javascript" src="/files/fb/jquery.easing-1.3.pack.js"></script>
 <script type="text/javascript" src="/files/fb/jquery.mousewheel-3.0.6.pack.js"></script>
 <script type="text/javascript" src="/files/fb/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/files/js/jquery.form.js"></script>
 
 <link rel="stylesheet" href="/files/fb/jquery.fancybox.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="/files/css/tipsy.css" type="text/css" />
 <link rel="stylesheet" href="/files/css/tabs.css" type="text/css" />
 <link rel="stylesheet" href="/files/css/buttons.css" type="text/css" />
+<link rel="stylesheet" href="/files/css/formee/css/form-structure.css" type="text/css"/>
+<link rel="stylesheet" href="/files/css/formee/css/form-style.css" type="text/css"/>
 <style>
 .banner-filtros{	
 	height: 60px;
@@ -33,7 +36,8 @@
 	$(document).ready(function(){
 		{% if not noshare %}
 		$('#share').click(function(){
-			$.get('?url=1', function(data){
+			var csrf_token =  $.cookie('csrftoken');
+			$.post('.', {'url':1, 'csrfmiddlewaretoken':csrf_token}, function(data){
 				$('#clippy_117').html(data);
 				$('#copiador').show();				
 			});
@@ -42,18 +46,124 @@
 		$("#sharesave").fancybox({
 			maxWidth	: 800,
 			maxHeight	: 600,
-			fitToView	: false,
-			width		: '70%',
-			height		: '70%',
+			fitToView	: true,
+			width		: '50%',
+			height		: '40%',
 			autoSize	: false,
 			closeClick	: false,
-			openEffect	: 'none',
-			closeEffect	: 'none'
+			openEffect	: 'elastic',
+			closeEffect	: 'fade'
 		});
-		{% endif %}
+		$("#generatefile").fancybox({
+			maxWidth	: 800,
+			maxHeight	: 600,
+			fitToView	: true,
+			width		: '70%',
+			height		: '80%',
+			autoSize	: false,
+			closeClick	: false,
+			openEffect	: 'elastic',
+			closeEffect	: 'fade',
+			beforeLoad  : function(){
+				$('#reportbodytable').html('');
+				$.getJSON('/ajax/salidas/', function(data){
+					$.each(data, function(i, item){
+						var $tr = $('<tr></tr>');			
+						var _td = '<td></td>';
+						$tr.append($(_td)
+								.html($('<input />')
+								.addClass('salida')
+								.attr({'type': 'checkbox', 'id': 'id_'+item.id, 'name': ''+item.id})));						
+						$tr.append($(_td)
+								.html($('<a></a>')
+								.attr({'href': '{{sitio.domain}}/i/'+item.hash, 'target': '_blank'})
+								.html('{{sitio.domain}}/i/'+item.hash)));
+						$tr.append($(_td).html(item.date));
+						$tr.append($(_td).html(item.comment));						
+						$tr.appendTo($('#reportbodytable'));
+					});
+				});
+			}
+		});		
+		{% endif %}		
 	});	
 	$(function() {
 	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'w'});
+	   $('.tabs').tabs();
+	   $('#guardarfile').click(function(){
+		   var coment = $('#id_comentario').val();
+		   var svg = bar_chart.getSVG();
+		   
+		   var csrf_token =  $.cookie('csrftoken');		  
+		   /*
+		   var form = $('<form>').attr({
+		       type: 'hidden',
+		       method: 'POST',		       
+		       action: 'http://localhost:9800/',
+		       id: 'formreport'
+		   }).appendTo($('body'));
+			
+		   $.each(['filename', 'type', 'width', 'svg', 'img_url'], function(i, name){
+			   $('<input>').attr({
+				   type: 'hidden',
+				   name: name,
+				   value: {
+					   filename: 'chart',
+					   type: 'image/png',
+					   width: bar_chart.options.chart.width,
+					   svg: svg,
+					   img_url: '1'
+			   	   }[name]}).appendTo($(form));
+		   });		   
+		   $('#formreport').submit(function(evt){ alert('data'); });*/
+		   	   
+		   $.post('.', {
+				   'url': 1,
+				   'save': 1,
+				   'comment':coment,
+				   'bar_svg':svg,
+				   'csrfmiddlewaretoken':csrf_token
+			   }, 
+			   function(data){
+				   $('#clippy_117').html(data);
+				   $('#copiador').show();
+				   alert('Guardado con exito! :D');
+				   $.fancybox.close();
+			});
+		   return false; 
+	   });
+	   $('#id_todos').click(function(){
+		   var state = $(this).attr('checked');
+		   if(state){
+			   $('input.salida').each(function(i, item){			   
+				   $(this).attr('checked', true); 
+			   });   
+		   }else{
+			   $('input.salida').each(function(i, item){			   
+				   $(this).attr('checked', false); 
+			   });
+		   }		   
+	   });
+	   $('#generate_report').click(function(){
+		   var ids = new Array();
+		   $("input.salida:checked").each(function(){			   
+			   ids.push($(this).attr('name'));			   
+		   });
+		   var csrf_token =  $.cookie('csrftoken');
+		   var form = $('<form>').attr({
+		       type: 'hidden',
+		       method: 'POST',
+		       action: '/report/',
+		       id: 'formreport'
+		   }).appendTo('body');
+			
+		   $('<input>').attr({type: 'hidden', name: 'ids',  value: ids}).appendTo(form);
+		   $('<input>').attr({type: 'hidden', name: 'csrfmiddlewaretoken',  value: csrf_token}).appendTo(form);
+				
+		   $(form).submit();		   
+		   return false;
+	   });
+	   
 	});
 </script>
 {% endblock %}
@@ -64,21 +174,25 @@
 	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}}</center>	
 </div>
 <div class="tablegatito">
-	<div class="dinamictable">
-		{% load_table dicc opts2 var2 main_field total tipo %}
-	</div>
 	<div class="tableoptions" id="tableoptions">
-		<a class="guardarXLS optionsbutton" href="#" onclick="exportarXLS('result_table'); return false;">Exportar <img src="/files/img/xls.png" alt=":D"></a>
-		{% if not noshare %}
-		<a href="#" id="share" class="optionsbutton">Compartir <img src="/files/img/share.png" alt=":D"></a>
-		<a href="#inline" id="sharesave" class="optionsbutton">Guardar para informe <img src="/files/img/save.png" alt=":D"></a><br>
+		<div style="float: left;">
+			<a class="guardarXLS optionsbutton" href="#" onclick="exportarXLS('result_table'); return false;">Exportar <img src="/files/img/xls.png" alt=":D"></a>
+		{% if not noshare %}		
+			<a href="#inline" id="sharesave" class="optionsbutton">Guardar para informe <img src="/files/img/save.png" alt=":D"></a>
+			<a href="#file" id="generatefile" class="optionsbutton">Generar informe <img src="/files/img/file.png" alt=":D"></a>
+			<a href="#" id="share" class="optionsbutton">Compartir <img src="/files/img/share.png" alt=":D"></a>
+		</div>
 		<div id="copiador" style="display: none;">
-			<span id="clippy_117"></span>
-			{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+			<span id="clippy_117"></span>{% clippy "clippy_117" "14x14" "#FFFFFF" "opaque" %}
+		</div>
+		{% else %}
 		</div>
 		{% endif %}
+		<div class="clean"></div>
 	</div>
-	<div class="clean"></div>	
+	<div class="dinamictable">
+		{% load_table dicc opts2 var2 main_field total tipo %}
+	</div>		
 </div>
 
 
@@ -109,14 +223,29 @@
 </div>
 <div style="display: none;">
 	<div id="inline">
-		<form method="post" action=".">{% csrf_token %}
-			
+		<form method="POST" action="." class="form">{% csrf_token %}
+			<label>Comentario: </label>
+			<textarea rows="5" cols="50" name="comentario" id="id_comentario"></textarea><br><br>
+			<input type="submit" id="guardarfile" value="Guardar" title="Guardar">
 		</form>
 	</div>
-</div> 
-<script>
-$(function () {
-	$('.tabs').tabs()
-})
-</script>
+	<div id="file">
+		<div class="banner banner-filtros en_inline">
+			<center class="banner_title">Generar reporte</center>	
+		</div>				
+		<table class="result_table reporte_tabla" width="100%">
+			<thead>
+				<tr>
+					<th><input id="id_todos" type="checkbox" name="todos" title="Marcar todos"></th>
+					<th>Dirección</th>
+					<th>Fecha</th>
+					<th>Comentario</th>										
+				</tr>
+			</thead>
+			<tbody id="reportbodytable">				
+			</tbody>
+		</table><br>
+		<input type="submit" id="generate_report" value="Generar Reporte" title="Generar Reporte" class="optionsbutton">		
+	</div>
+</div>
 {% endblock %}

@@ -10,7 +10,7 @@ from g12d.utils import get_file_path
 from g12d import short
 
 from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^thumbs\.ImageWithThumbsField"])
+add_introspection_rules([], ["^g12d\.thumbs\.ImageWithThumbsField"])
 
 SI_NO = ((1, u'Si'), (2, u'No'))
 
@@ -167,10 +167,15 @@ class Output(models.Model):
     params = models.TextField()
     comment = models.TextField(blank=True, default='')
     file = models.BooleanField()
+    bar_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
+    pie1_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
+    pie2_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
     
     def _hash(self):
         if self.id:
-            return short.encode_url(self.id) 
+            return short.encode_url(self.id)
+        
+    hash = property(_hash) 
     
     class Meta:
         verbose_name = u'Salida'

@@ -281,6 +281,17 @@ a{outline: none; text-decoration: none;}
 	font-weight: bold;
 	line-height: 60px;
 }
+.reporte_tabla{
+	td{
+		text-align: center;
+	}
+}
+.en_inline{
+	height: 40px !important;
+	.banner_title{
+		line-height: 40px;
+	}	
+}
 /*-------------- CSS para formulario de cruce de variables ----------------------*/
 #subfiltros ul{
 	list-style: none;
@@ -374,22 +385,25 @@ ul.tabs li{
 	width: 960px;
 	margin-bottom: 15px;
 	padding-top: 5px;
-	.dinamictable{
-		float: left;
-		width: 600px;
+	.dinamictable{		
 		overflow: hidden;
 		overflow-x: auto; 
 	}
-	.tableoptions{
-		float: left;
-		width: 360px;
+	.tableoptions{		
 		margin-top: 10px;
+		margin-bottom: 10px;
+		padding-left: 10px;
+	}
+	#copiador{
+		float: left;
+		margin-top: -10px;
+		margin-left: 8px;
 	}	
 }
 #clippy_117{
 	.rounded-corners(3px);
 	border: 1px solid #ccc;
-	display: inline-block;
+	display: inline-block;		
 	padding: 1px 5px;
 	margin-top: 10px;
 	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;	
@@ -460,8 +474,7 @@ ul.tabs li{
 	background-image: -moz-linear-gradient(top, #eee 25%, #DEDBCB);
 	background-image: -ms-linear-gradient(#eee, #eee 25%, #DEDBCB);
 	background-image: -o-linear-gradient(#eee, #eee 25%, #DEDBCB);
-	background-image: linear-gradient(#eee, #eee 25%, #DEDBCB);
-	
+	background-image: linear-gradient(#eee, #eee 25%, #DEDBCB);	
 	font: 0.8em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;	
 	text-align: center;	
 	color: #333; 	 
@@ -485,6 +498,12 @@ ul.tabs li{
 	span.activa:hover{
 		cursor: pointer;
 		background: #dce6e8;		
+	}
+}
+.result_table a{
+	color: #6C4E58;
+	&:hover{
+		color: #D51C5B;
 	}
 }
 .ui-multiselect[type="button"]{

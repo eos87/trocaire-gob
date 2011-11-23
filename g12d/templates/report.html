@@ -1,0 +1,13 @@
+{% load tools %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<img src="http://localhost:8000/files/img/index-pic.png" alt="">
+{% for obj in lista %}
+{% load_table obj.dicc obj.opts2 obj.var2 obj.main_field obj.total obj.tipo 1 obj.comment %}<br>
+{% endfor %}
+</body>
+</html>

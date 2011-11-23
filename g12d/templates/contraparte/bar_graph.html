@@ -30,9 +30,10 @@
         align: 'center',
         verticalAlign: 'bottom',
         shadow: true
-    }    
+    }
+	var bar_chart;
     $(document).ready(function() {
-        var chart = new Highcharts.Chart({
+        bar_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'grafo',
                 defaultSeriesType: 'column',

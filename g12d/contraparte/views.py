@@ -10,6 +10,7 @@ from g12d.forms import *
 from g12d import short
 from models import *
 import datetime
+import thread
 
 def filtro_proyecto(request):
     proy_params = {}
@@ -77,6 +78,7 @@ def variables(request):
 def output(request, saved_params=None):   
     #chequear si no se trara de una salida guardada y reasignar variables    
     if saved_params:        
+        total = saved_params['total']
         params = saved_params['params']
         main_field = saved_params['main']
         var2 = saved_params['var2']
@@ -90,34 +92,38 @@ def output(request, saved_params=None):
     query = _get_query(params)        
     dicc = {}    
     relation = Actividad._meta.get_field_by_name(main_field)[0].rel.to    
-    opts = relation.objects.all()    
+    opts = relation.objects.all()
+    sitio = Site.objects.all()[0]      
     
-    #Aca inicia el guardado de la la salida, generamiento de url y reporte
-    url = request.GET.get('url', '')
-    comment = request.GET.get('comment', '')
-    save = request.GET.get('save', '')
-    if url != '':
-        print 'Esta shit esta pasando desde hace rato'
-        #guardando la session y generar URL
-        params = {}
-        params['main'] = request.session['main']
-        params['var2'] = request.session['var2']
-        params['params'] = request.session['params']
-        params['total'] = True if request.session['total'] else False
-        params['bar_graph'] = True if request.session['bar_graph'] else False
-        params['pie_graph'] = True if request.session['pie_graph'] else False
-        params['salida'] = request.session['filtro']['salida']        
-        
-        obj, created = Output.objects.get_or_create(params=str(params),
-                                           date=datetime.date.today(),
-                                           user=request.user)        
-        if save == '1':
-            obj.file = True
-            if comment:
-                obj.comment = comment
-        obj.time = datetime.datetime.time(datetime.datetime.now())
-        obj.save()        
-        return HttpResponse('%s/i/%s' % (Site.objects.all()[0].domain, obj._hash()))
+    #Aca inicia el guardado de la la salida, generamiento de url y reporte    
+    if request.method == 'POST':        
+        url = request.POST.get('url', '')
+        comment = request.POST.get('comment', None)
+        save = request.POST.get('save', None)
+        bar_img = request.POST.get('bar_img', None)        
+        if url != '':
+            #guardando la session y generar URL
+            params = {}
+            params['main'] = request.session['main']
+            params['var2'] = request.session['var2']
+            params['params'] = request.session['params']
+            params['total'] = True if request.session['total'] else False
+            params['bar_graph'] = True if request.session['bar_graph'] else False
+            params['pie_graph'] = True if request.session['pie_graph'] else False
+            params['salida'] = request.session['filtro']['salida']        
+            
+            obj, created = Output.objects.get_or_create(params=str(params),
+                                               date=datetime.date.today(),
+                                               user=request.user)        
+            if save == '1':
+                obj.file = True
+                if comment:                
+                    obj.comment = comment
+                if bar_img:
+                    obj.bar_img = bar_img                  
+            obj.time = datetime.datetime.time(datetime.datetime.now())        
+            obj.save()        
+            return HttpResponse('%s/i/%s' % (sitio.domain, obj._hash()))
     
     #creacion del diccionario con los datos de la tabla
     if var2[0] == 'evaluacion':
@@ -141,7 +147,8 @@ def output(request, saved_params=None):
                 
     #si es una salida guardada retornar valores aqui         
     if saved_params:
-        return {'dicc': dicc, 'opts': opts, 'opts2': opts2, 'tipo': tipo}
+        return {'dicc': dicc, 'opts': opts, 'opts2': opts2, 'tipo': tipo, 'total': total,
+                'var2': var2, 'main_field': main_field}
     
     #codigo para solicitar detalles    
     k = request.GET.get('k', '')
@@ -154,7 +161,7 @@ def output(request, saved_params=None):
                               foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
                               foto1_pic=obj.foto1.url_640x480, foto2_pic=obj.foto2.url_640x480, foto3_pic=obj.foto3.url_640x480, 
                               comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
-                              fecha=obj.fecha.strftime('%Y-%m-%d')))               
+                              fecha=obj.fecha.strftime('%d/%m/%Y')))               
         return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
                                
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
@@ -218,3 +225,40 @@ def get_proyectos(request):
     else:
         return HttpResponse(':(')
     return HttpResponse(simplejson.dumps(list(proyectos)), mimetype="application/json")
+
+def get_salidas(request):
+    sitio = Site.objects.all()[0].domain    
+    lista = []    
+    #obtener las salidas guardadas por el usuario
+    if request.user.is_authenticated():
+        salidas = Output.objects.filter(user=request.user)
+        for obj in salidas:
+            lista.append(dict(id=obj.id, comment=obj.comment, date=obj.date.strftime('%d/%m/%Y'), hash=obj.hash))             
+    return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
+
+def generate_report(request):
+    if request.method == 'POST':
+        ids = request.POST['ids'] 
+        salidas = Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user)
+        lista = []
+        for salida in salidas:
+            dicc = output(request, eval(salida.params))
+            dicc['comment'] = salida.comment
+            lista.append(dicc)
+        
+        response = render_to_response('report.html', {'lista': lista})
+        response['Content-Disposition'] = 'attachment; filename=reporte.doc'    
+        response['Content-Type'] = 'application/msword'
+        response['Charset'] ='UTF-8'
+        return response
+    else:
+        ids = request.GET.get('ids', '') 
+        salidas = Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user)
+        lista = []
+        for salida in salidas:
+            dicc = output(request, eval(salida.params))
+            dicc['comment'] = salida.comment
+            lista.append(dicc)
+        #return HttpResponse(':P')
+        return render_to_response('report.html', RequestContext(request, {'lista': lista}))    
+    

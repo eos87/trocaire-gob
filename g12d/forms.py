@@ -104,7 +104,4 @@ class SubFiltroForm(forms.Form):
             #validando que solo se elija una segunda variable         
             raise forms.ValidationError("Solo puede seleccionar una segunda variable")                            
         
-        return cleaned_data        
-
-
-
+        return cleaned_data

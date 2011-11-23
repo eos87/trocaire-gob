@@ -22,7 +22,7 @@
 
   "use strict"
 
-  function activate ( element, container ) {
+  function activate ( element, container ) {	  
     container
       .find('> .active')
       .removeClass('active')
@@ -34,7 +34,7 @@
     if ( element.parent('.dropdown-menu') ) {
       element.closest('li.dropdown').addClass('active')
     }
-  }
+  }  
 
   function tab( e ) {
     var $this = $(this)
@@ -69,8 +69,11 @@
 
   $.fn.tabs = $.fn.pills = function ( selector ) {
     return this.each(function () {
-      $(this).delegate(selector || '.tabs li > a, .pills > li > a', 'click', tab)
-    })
+      $(this).delegate(selector || '.tabs li > a, .pills > li > a', 'click', tab);      
+    });    
+  }
+  $.fn.tabs.foo = function (element, container){
+  	activate(element, container);
   }
 
   $(document).ready(function () {

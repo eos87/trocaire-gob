@@ -1,69 +1,67 @@
 {% load tools %}
 <div id="result_table">
-	<table class="result_table">
-		<thead>			
-			<tr>
-				<th rowspan="2">{{main_field|unslugify}}</th>
-				<th colspan="{{opts2|length}}">{{var2.1|unslugify}}</th>
-				{% if total %}
-				<th rowspan="2">Total</th>
-				{% endif %}				
-			</tr>
-			<tr>				
-				{% for value in opts2 %}
+{% if comment %}
+<div>{{comment}}</div>
+{% endif %}
+<table class="result_table" width="100%" {% if borde %}border="1" cellspacing="0" cellpadding="0"{% endif %}>
+	<thead>			
+		<tr>
+			<th rowspan="2">{{main_field|unslugify}}</th>
+			<th colspan="{{opts2|length}}">{{var2.1|unslugify}}</th>
+			{% if total %}
+			<th rowspan="2">Total</th>
+			{% endif %}				
+		</tr>
+		<tr>				
+			{% for value in opts2 %}
+			{% if tipo == 'choice' %}
+			<th>{{value.1}}</th>
+			{% else %}
+			<th>{{value|title}}</th>
+			{% endif %}
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for key, value in dicc.items %}
+		<tr>
+			<td><span>{{key}}</span></td>
+			{% for k in opts2 %}
 				{% if tipo == 'choice' %}
-				<th>{{value.1}}</th>
+				<td><span class="activa" onclick="loadCell('{{key}}', '{{k.1}}');">{{value|get_value:k.1|length}}</span></td>
 				{% else %}
-				<th>{{value|title}}</th>
+				<td><span>{{value|get_value:k}}</span></td>
 				{% endif %}
-				{% endfor %}
-			</tr>
-		</thead>
-		<tbody>
-			{% for key, value in dicc.items %}
-			<tr>
-				<td><span>{{key}}</span></td>
-				{% for k in opts2 %}
-					{% if tipo == 'choice' %}
-					<td><span class="activa" onclick="loadCell('{{key}}', '{{k.1}}');">{{value|get_value:k.1|length}}</span></td>
-					{% else %}
-					<td><span>{{value|get_value:k}}</span></td>
-					{% endif %}
-				{% endfor %}
-				{% if total %}
-					{% if tipo == 'choice' %}
-					<td><span>{{value|total_dict_query}}</span></td>
-					{% else %}
-					<td><span>{{value|total_dict}}</span></td>
-					{% endif %}
-				{% endif %}
-			</tr>			
 			{% endfor %}
 			{% if total %}
-			<tr>
-				<td><span><b>Total</b></span></td>
-				{% for k in opts2 %}  
-                <td><span>{% if tipo == 'choice' %}{{dicc|total_per_query_key:k.1}}{% else %}{{dicc|total_per_key:k}}{% endif %}</span></td>
-                {% endfor %}
-                <td><span>
-                {% if tipo == 'choice' %}
-                {{dicc|total_general:1}}
-                {% else %}
-                {{dicc|total_general}}
-                {% endif %}
-                </span>
-                </td>
-			</tr>
+				{% if tipo == 'choice' %}
+				<td><span>{{value|total_dict_query}}</span></td>
+				{% else %}
+				<td><span>{{value|total_dict}}</span></td>
+				{% endif %}
 			{% endif %}
-		</tbody>
-	</table>
+		</tr>			
+		{% endfor %}
+		{% if total %}
+		<tr>
+			<td><span><b>Total</b></span></td>
+			{% for k in opts2 %}  
+               <td><span>{% if tipo == 'choice' %}{{dicc|total_per_query_key:k.1}}{% else %}{{dicc|total_per_key:k}}{% endif %}</span></td>
+               {% endfor %}
+               <td><span>
+               {% if tipo == 'choice' %}
+               {{dicc|total_general:1}}
+               {% else %}
+               {{dicc|total_general}}
+               {% endif %}
+               </span>
+               </td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
 </div>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".fancybox").fancybox();
-	});
-</script>
+{% if not borde %}
 <script type="text/javascript">
 function loadCell(key, key2){
 	$.getJSON('?k='+key+'&k2='+key2, function(data){
@@ -77,7 +75,19 @@ function loadCell(key, key2){
 			if(obj.foto3_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto3_pic+"'><img src='"+obj.foto3_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
 			actividad+="</div><div class='clean'></div>";			
 			$(actividad).appendTo($('#detalle'));
+			
+			//activar tab adecuada
+			$.fn.tabs.foo($('a[href="#detalle"]').parent(), $('a[href="#detalle"]').parent().parent());
+			$.fn.tabs.foo($('#detalle'), $('#detalle').parent());			
 		});
 	});
 }
 </script>
+<script type="text/javascript">
+	$(function() {
+		$("a[rel=group]").fancybox({			
+			'titlePosition' 	: 'over',		
+		});	
+	});
+</script>
+{% endif %}

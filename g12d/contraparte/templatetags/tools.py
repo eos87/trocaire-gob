@@ -4,13 +4,11 @@ register = template.Library()
 
 #-------- begin inclusion tags ------------
 @register.inclusion_tag('contraparte/load_table.html')
-def load_table(dicc, opts2, var2, main_field, total, tipo):    
-    return { 'dicc' : dicc,
-            'opts2': opts2,
-            'var2': var2,
-            'main_field': main_field,
-            'total': total,
-            'tipo': tipo}
+def load_table(dicc, opts2, var2, main_field, total, tipo, borde=None, comment=None):    
+    return { 'dicc' : dicc, 'opts2': opts2,
+            'var2': var2, 'main_field': main_field,
+            'total': total, 'tipo': tipo, 
+            'borde': borde, 'comment': comment}
     
 @register.inclusion_tag('contraparte/bar_graph.html')
 def bar_graph(dicc, var2, main_field, tipo):    
