@@ -207,7 +207,15 @@
 		{% endif %}
 	</ul> 
 	<div class="pill-content">	
-		<div class="active" id="detalle">			
+		<div class="active" id="detalle">
+		<div class="form detalles_form">			
+			<label for="id_multimedia">
+			<input value="multimedia" type="radio" name="contenido_detalle" id="id_contenido" />Multimedia</label>
+			<label for="id_comentarios">
+			<input value="comentarios" type="radio" name="contenido_detalle" id="id_contenido" />Comentarios</label>			
+		</div>
+		<div id="contenido_de">
+		</div>
 		</div>
 		{% if request.session.bar_graph or bar_graph %}
 		<div id="bargraph"><br>
