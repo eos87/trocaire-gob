@@ -100,7 +100,9 @@ def output(request, saved_params=None):
         url = request.POST.get('url', '')
         comment = request.POST.get('comment', None)
         save = request.POST.get('save', None)
-        bar_img = request.POST.get('bar_img', None)        
+        bar_svg = request.POST.get('bar_svg', None)
+        pie1_svg = request.POST.get('pie1_svg', None)
+        pie2_svg = request.POST.get('pie2_svg', None)        
         if url != '':
             #guardando la session y generar URL
             params = {}
@@ -119,8 +121,13 @@ def output(request, saved_params=None):
                 obj.file = True
                 if comment:                
                     obj.comment = comment
-                if bar_img:
-                    obj.bar_img = bar_img                  
+                if bar_svg:
+                    thread.start_new_thread(get_graph_png, (bar_svg, obj, 'bar_img'))                    
+                if pie1_svg:
+                    thread.start_new_thread(get_graph_png, (pie1_svg, obj, 'pie1_img'))                    
+                if pie2_svg:
+                    thread.start_new_thread(get_graph_png, (pie2_svg, obj, 'pie2_img'))                  
+                                     
             obj.time = datetime.datetime.time(datetime.datetime.now())        
             obj.save()        
             return HttpResponse('%s/i/%s' % (sitio.domain, obj._hash()))
@@ -153,15 +160,21 @@ def output(request, saved_params=None):
     #codigo para solicitar detalles    
     k = request.GET.get('k', '')
     k2 = request.GET.get('k2', '')
+    data = request.GET.get('data', '')
     if k and k2:
         lista = []
         for obj in Actividad.objects.filter(id__in=[a.id for a in dicc[k][k2]]):
             #armar el json a retornar
-            lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_thumb=obj.foto1.url_128x96,
-                              foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
-                              foto1_pic=obj.foto1.url_640x480, foto2_pic=obj.foto2.url_640x480, foto3_pic=obj.foto3.url_640x480, 
-                              comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
-                              fecha=obj.fecha.strftime('%d/%m/%Y')))               
+            if data == 'multimedia':                
+                lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_thumb=obj.foto1.url_128x96,
+                                  foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
+                                  foto1_pic=obj.foto1.url_640x480, foto2_pic=obj.foto2.url_640x480, foto3_pic=obj.foto3.url_640x480, 
+                                  comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
+                                  fecha=obj.fecha.strftime('%d/%m/%Y')))
+            elif data == 'comentarios':
+                lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, comentarios=obj.comentarios,
+                                  acuerdos=obj.acuerdos, comunidad__nombre=obj.comunidad.nombre, 
+                                  municipio__nombre=obj.municipio.nombre, fecha=obj.fecha.strftime('%d/%m/%Y')))
         return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
                                
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
@@ -238,7 +251,7 @@ def get_salidas(request):
 
 def generate_report(request):
     if request.method == 'POST':
-        ids = request.POST['ids'] 
+        ids = request.POST['ids']  
         salidas = Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user)
         lista = []
         for salida in salidas:
@@ -252,13 +265,21 @@ def generate_report(request):
         response['Charset'] ='UTF-8'
         return response
     else:
-        ids = request.GET.get('ids', '') 
-        salidas = Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user)
-        lista = []
-        for salida in salidas:
-            dicc = output(request, eval(salida.params))
-            dicc['comment'] = salida.comment
-            lista.append(dicc)
-        #return HttpResponse(':P')
-        return render_to_response('report.html', RequestContext(request, {'lista': lista}))    
+        ids = request.GET.get('ids', '')
+        delete = request.GET.get('e', None)
+        if delete == 'ok':
+            Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user).delete()
+            return HttpResponse('Reportes eliminados correctamente!')
+                
+        return render_to_response('report.html', RequestContext(request, {'lista': lista}))
+    
+def get_graph_png(svg, obj, field):
+    import urllib
+    data_dict = {'svg': svg, 'type': 'image/png', 'width': 960, 'img_url': '1', 'filename': 'chart'}
+    
+    server_data = urllib.urlencode(data_dict)
+    response = urllib.urlopen('http://localhost:9800/', data = server_data)    
+    setattr(obj, field, response.read()) 
+    obj.save()
+    return response.read()
     

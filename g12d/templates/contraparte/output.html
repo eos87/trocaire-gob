@@ -48,7 +48,7 @@
 			maxHeight	: 600,
 			fitToView	: true,
 			width		: '50%',
-			height		: '40%',
+			height		: '45%',
 			autoSize	: false,
 			closeClick	: false,
 			openEffect	: 'elastic',
@@ -89,49 +89,7 @@
 	});	
 	$(function() {
 	   $('.clippy-tooltip').tipsy({fade: true, gravity: 'w'});
-	   $('.tabs').tabs();
-	   $('#guardarfile').click(function(){
-		   var coment = $('#id_comentario').val();
-		   var svg = bar_chart.getSVG();
-		   
-		   var csrf_token =  $.cookie('csrftoken');		  
-		   /*
-		   var form = $('<form>').attr({
-		       type: 'hidden',
-		       method: 'POST',		       
-		       action: 'http://localhost:9800/',
-		       id: 'formreport'
-		   }).appendTo($('body'));
-			
-		   $.each(['filename', 'type', 'width', 'svg', 'img_url'], function(i, name){
-			   $('<input>').attr({
-				   type: 'hidden',
-				   name: name,
-				   value: {
-					   filename: 'chart',
-					   type: 'image/png',
-					   width: bar_chart.options.chart.width,
-					   svg: svg,
-					   img_url: '1'
-			   	   }[name]}).appendTo($(form));
-		   });		   
-		   $('#formreport').submit(function(evt){ alert('data'); });*/
-		   	   
-		   $.post('.', {
-				   'url': 1,
-				   'save': 1,
-				   'comment':coment,
-				   'bar_svg':svg,
-				   'csrfmiddlewaretoken':csrf_token
-			   }, 
-			   function(data){
-				   $('#clippy_117').html(data);
-				   $('#copiador').show();
-				   alert('Guardado con exito! :D');
-				   $.fancybox.close();
-			});
-		   return false; 
-	   });
+	   $('.tabs').tabs();	   
 	   $('#id_todos').click(function(){
 		   var state = $(this).attr('checked');
 		   if(state){
@@ -163,8 +121,55 @@
 		   $(form).submit();		   
 		   return false;
 	   });
-	   
+	   $('#delete_report').click(function(){
+		   var ids = new Array();
+		   $("input.salida:checked").each(function(){			   
+			   ids.push($(this).attr('name'));			   
+		   });
+		   $.get('/report/?ids='+ids+'&e=ok', function(data){			   
+			   alert(data);
+			   $.fancybox.close();
+			   window.location.reload();
+		   });
+	   });
 	});
+	$(document).ready(function(){
+		$('#guardarfile').click(function(){
+			$(this).hide();			
+			var coment = $('#id_comentario').val();			
+			{% if request.session.bar_graph or bar_graph %}
+			var svg = bar_chart.getSVG();
+			{% endif %}
+			{% if request.session.pie_graph or pie_graph %}
+			var svg_pie1 = pie1_chart.getSVG();
+			var svg_pie2 = pie2_chart.getSVG();
+			{% endif %}			
+
+			var csrf_token =  $.cookie('csrftoken');
+			$.fancybox.showLoading();
+			$.post('.', {
+				'url': 1,
+				'save': 1,
+				'comment':coment,				
+				{% if request.session.bar_graph or bar_graph %}
+				'bar_svg':svg,
+				{% endif %}
+				{% if request.session.pie_graph or pie_graph %}
+				'pie1_svg':svg_pie1,
+				'pie2_svg':svg_pie2,
+				{% endif %}		
+				'csrfmiddlewaretoken':csrf_token
+				},
+				function(data){
+					$('#clippy_117').html(data);
+					$('#copiador').show();
+					alert('Guardado con exito! :D');
+					$.fancybox.close();
+					window.location.reload();
+					});			
+			return false;
+			});
+		});
 </script>
 {% endblock %}
 
@@ -198,25 +203,31 @@
 
 <div class="contenedortabs">
 	<ul class="tabs">
+		{% if not noshare %}
 		<li class="active"><a href="#detalle">Detalle</a></li>
+		{% endif %}
 		{% if request.session.bar_graph or bar_graph %}
 		<li><a href="#bargraph">Gráfico de barra</a></li>
 		{% endif %}
 		{% if request.session.pie_graph or pie_graph %}
-		<li><a href="#piegraph">Gráfico de pastel</a></li>
+		<li>
+		<a href="#piegraph">Gráfico de pastel</a>
+		</li>
 		{% endif %}
 	</ul> 
 	<div class="pill-content">	
+		{% if not noshare %}
 		<div class="active" id="detalle">
 		<div class="form detalles_form">			
 			<label for="id_multimedia">
-			<input value="multimedia" type="radio" name="contenido_detalle" id="id_contenido" />Multimedia</label>
+			<input value="multimedia" type="radio" name="contenido_detalle" id="id_contenido" checked="checked"/>Multimedia</label>
 			<label for="id_comentarios">
 			<input value="comentarios" type="radio" name="contenido_detalle" id="id_contenido" />Comentarios</label>			
 		</div>
 		<div id="contenido_de">
 		</div>
 		</div>
+		{% endif %}
 		{% if request.session.bar_graph or bar_graph %}
 		<div id="bargraph"><br>
 			{% bar_graph dicc var2 main_field tipo %}
@@ -254,6 +265,7 @@
 			</tbody>
 		</table><br>
 		<input type="submit" id="generate_report" value="Generar Reporte" title="Generar Reporte" class="optionsbutton">		
+		<input type="submit" id="delete_report" value="Eliminar" title="Eliminar" class="optionsbutton">
 	</div>
 </div>
 {% endblock %}

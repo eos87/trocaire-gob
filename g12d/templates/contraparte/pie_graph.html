@@ -37,8 +37,10 @@
            return '<b>'+ this.point.name +'</b>: '+ this.y;
        }
    }       
+	var pie1_chart;
+	var pie2_chart;
     $(document).ready(function() {
-    	var chart1 = new Highcharts.Chart({
+    	pie1_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'divp',
                 defaultSeriesType: 'pie',
@@ -61,7 +63,7 @@
                              ]
             	}]
         });
-    	var chart2 = new Highcharts.Chart({
+    	pie2_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'divp2',
                 defaultSeriesType: 'pie',

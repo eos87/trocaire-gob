@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'g12d.views.home', name='home'),    
     url(r'^xls/$', 'g12d.utils.save_as_xls', name='save_xls' ),
-    url(r'^report/$', 'g12d.contraparte.views.generate_report', name='generate_report' ),
+    url(r'^report/$', 'g12d.contraparte.views.generate_report', name='generate_report' ),    
     url(r'^ajax/proyectos/$', 'g12d.contraparte.views.get_proyectos', name='get_proyectos' ),
     url(r'^ajax/salidas/$', 'g12d.contraparte.views.get_salidas', name='get_salidas' ),
     url(r'^fillout/', include('g12d.formutils.urls')),

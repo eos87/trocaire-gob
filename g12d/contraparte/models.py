@@ -69,8 +69,8 @@ TEMA_ACTIVIDAD = ((1, u'Derechos Humanos'), (2, u'Empoderamiento'),
 EJES = ((1, u'Interculturalidad'), (2, u'Género'), 
         (3, u'Medio ambiente'), (4, u'Generacional'))
 
-EVALUACION = ((99, u'No aplica'), (1, u'Muy malo'), (2, u'Malo'), 
-              (3, u'Regular'), (4, u'Bueno'), (5, u'Muy bueno'))
+EVALUACION = ((99, u'No aplica'), (1, u'Muy bueno'), (2, u'Bueno'),
+              (3, u'Regular'), (4, u'Malo'), (5, u'Muy malo'))
 
 class Actividad(models.Model):
     organizacion = models.ForeignKey(Organizacion)
@@ -173,9 +173,9 @@ class Output(models.Model):
     params = models.TextField()
     comment = models.TextField(blank=True, default='')
     file = models.BooleanField()
-    bar_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
-    pie1_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
-    pie2_img = models.ImageField(upload_to='grafos/', blank=True, null=True)
+    bar_img = models.URLField(blank=True, null=True, verify_exists=False)
+    pie1_img = models.URLField(blank=True, null=True, verify_exists=False)
+    pie2_img = models.URLField(blank=True, null=True, verify_exists=False)
     
     def _hash(self):
         if self.id:
@@ -184,5 +184,6 @@ class Output(models.Model):
     hash = property(_hash) 
     
     class Meta:
+        ordering = ['-id']
         verbose_name = u'Salida'
         verbose_name_plural = u'Salidas'
