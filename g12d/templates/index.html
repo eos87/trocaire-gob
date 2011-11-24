@@ -40,7 +40,16 @@
 			</div>
 		</div>
 		<div class="index-text">
-			Mus enim pid penatibus nisi. Adipiscing et porttitor augue. Integer tincidunt, dignissim! In tortor, sagittis nunc hac mid? Ut facilisis, lundium odio mauris porta aenean vut arcu rhoncus elementum? Penatibus? Lorem arcu, velit cursus eu! Magna hac nunc placerat dapibus magna hac sit platea egestas aliquam tincidunt et? Amet sagittis enim pulvinar ac velit mus nec pid scelerisque pellentesque nec? Porta rhoncus Mus enim pid penatibus nisi. Adipiscing et porttitor augue. 
+			<p>El programa de Gobernabilidad y Derechos Humanos tiene como finalidad contribuir a la construcción 
+			de la gobernabilidad democrática en Nicaragua. Para ello, las organizaciones que forman parte de este 
+			promueven procesos de construcción de ciudadanía activa y amplían las capacidades políticas y técnicas 
+			de los ciudadanos y ciudadanas para el  ejercicio de sus derechos. Las organizaciones también promueven 
+			la construcción de nuevos liderazgos democráticos con perspectiva de género y generacional.</p>
+			
+			<p>Otro componente importante que promueven las organizaciones del programa es la participación 
+			ciudadana en la fiscalización de los recursos públicos, la identificación de problemas comunes 
+			de las comunidades, la creación de consensos sobre sus problemáticas e intereses, así como la construcción 
+			y gestión de propuestas ante las autoridades locales.</p> 
 		</div>
 	</div>	
 	<div class="color-right">	
@@ -51,7 +60,7 @@
 				<div class="index-entry">
 					<div class="nombre-corto">{{org.nombre_corto|upper}}</div>
 					<div class="nombre-largo">{{org.nombre}}</div>
-					<div class="actcount">{{org.actividad_set.all.count}}</div>
+					<div class="actcount">Última actividad el: <b>{{org.last_register|date:"d F Y"}}</b></div>
 				</div>
 			{% endfor %}
 			</div>			

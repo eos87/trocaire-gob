@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 class ResultadoPrograma(models.Model):    
     nombre_corto = models.CharField(max_length=50)
@@ -23,6 +24,7 @@ class Organizacion(models.Model):
     web = models.URLField(verbose_name=u'Sitio web', blank=True, default='www.example.com')
     historia = models.TextField(blank=True, default='')        
     #TODO: logo
+    last_register = models.DateTimeField(editable=False, default=datetime.datetime.now())
     
     def __unicode__(self):
         return u'%s' % self.nombre_corto

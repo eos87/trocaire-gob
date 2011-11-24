@@ -8,6 +8,7 @@ from smart_selects.db_fields import ChainedForeignKey
 from g12d.thumbs import ImageWithThumbsField
 from g12d.utils import get_file_path
 from g12d import short
+import datetime
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^g12d\.thumbs\.ImageWithThumbsField"])
@@ -132,15 +133,20 @@ class Actividad(models.Model):
     video = models.CharField(max_length=300, blank=True, default='')
     
     mes = models.IntegerField(editable=False)
-    year = models.IntegerField(editable=False)
+    year = models.IntegerField(editable=False)    
     
     fileDir = 'fotos'
     
     def save(self, *args, **kwargs):
+        #guardando fecha de ultima edición
+        self.organizacion.last_register = datetime.datetime.now()
+        self.organizacion.save()
+        
+        #obteniendo mes and year por motivos de filtros
         self.mes = self.fecha.month
         self.year = self.fecha.year
         super(Actividad, self).save(*args, **kwargs)
-    
+            
     def __unicode__(self):
         return u'%s - %s' % (self.nombre_actividad, self.fecha)
     
