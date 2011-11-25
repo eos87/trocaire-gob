@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 from django.utils import simplejson
 from g12d.forms import *
 from g12d import short
+from g12d.settings import EXPORT_SERVER
 from models import *
 import datetime
 import thread
@@ -124,9 +125,9 @@ def output(request, saved_params=None):
                 if bar_svg:
                     thread.start_new_thread(get_graph_png, (bar_svg, obj, 'bar_img'))                    
                 if pie1_svg:
-                    thread.start_new_thread(get_graph_png, (pie1_svg, obj, 'pie1_img'))                    
+                    thread.start_new_thread(get_graph_png, (pie1_svg, obj, 'pie1_img', 450))                    
                 if pie2_svg:
-                    thread.start_new_thread(get_graph_png, (pie2_svg, obj, 'pie2_img'))                  
+                    thread.start_new_thread(get_graph_png, (pie2_svg, obj, 'pie2_img', 450))                  
                                      
             obj.time = datetime.datetime.time(datetime.datetime.now())        
             obj.save()        
@@ -228,9 +229,8 @@ def get_proyectos(request):
     if ids:
         try:
             ids = ids.split(',')
-            proyectos = Proyecto.objects.filter(organizacion__id__in=map(int, ids)).values('id', 
-                                                                                           'organizacion__nombre_corto', 
-                                                                                           'codigo')
+            proyectos = Proyecto.objects.filter(organizacion__id__in=map(int, ids),
+                                                aporta_trocaire=1).values('id', 'organizacion__nombre_corto', 'codigo')
             print proyectos
         except Exception as e:
             print e
@@ -244,7 +244,7 @@ def get_salidas(request):
     lista = []    
     #obtener las salidas guardadas por el usuario
     if request.user.is_authenticated():
-        salidas = Output.objects.filter(user=request.user)
+        salidas = Output.objects.filter(user=request.user, file=True)
         for obj in salidas:
             lista.append(dict(id=obj.id, comment=obj.comment, date=obj.date.strftime('%d/%m/%Y'), hash=obj.hash))             
     return HttpResponse(simplejson.dumps(lista), mimetype="application/json")
@@ -257,6 +257,9 @@ def generate_report(request):
         for salida in salidas:
             dicc = output(request, eval(salida.params))
             dicc['comment'] = salida.comment
+            dicc['bar_img'] = salida.bar_img
+            dicc['pie1_img'] = salida.pie1_img
+            dicc['pie2_img'] = salida.pie2_img
             lista.append(dicc)
         
         response = render_to_response('report.html', {'lista': lista})
@@ -273,12 +276,12 @@ def generate_report(request):
                 
         return render_to_response('report.html', RequestContext(request, {'lista': lista}))
     
-def get_graph_png(svg, obj, field):
+def get_graph_png(svg, obj, field, width=940):
     import urllib
-    data_dict = {'svg': svg, 'type': 'image/png', 'width': 960, 'img_url': '1', 'filename': 'chart'}
+    data_dict = {'svg': svg, 'type': 'image/png', 'width': width, 'img_url': '1', 'filename': 'chart'}
     
     server_data = urllib.urlencode(data_dict)
-    response = urllib.urlopen('http://localhost:9800/', data = server_data)    
+    response = urllib.urlopen(EXPORT_SERVER, data = server_data)    
     setattr(obj, field, response.read()) 
     obj.save()
     return response.read()

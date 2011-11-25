@@ -7,6 +7,15 @@
 <body>
 {% for obj in lista %}
 {% load_table obj.dicc obj.opts2 obj.var2 obj.main_field obj.total obj.tipo 1 obj.comment %}<br>
+{% if obj.bar_img %}
+<img src="{{obj.bar_img}}" alt="grafico de barra"><br>
+{% endif %}
+{% if obj.pie1_img %}
+<img src="{{obj.pie1_img}}" alt="grafico de pastel"><br>
+{% endif %}
+{% if obj.pie2_img %}
+<img src="{{obj.pie2_img}}" alt="grafico de pastel"><br>
+{% endif %}
 {% endfor %}
 </body>
 </html>

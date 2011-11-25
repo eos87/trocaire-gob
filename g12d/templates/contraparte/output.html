@@ -84,7 +84,11 @@
 					});
 				});
 			}
-		});		
+		});
+		{% else %}
+		$('span.activa').each(function(item){
+			$(this).removeAttr('onclick');
+		});
 		{% endif %}		
 	});	
 	$(function() {
@@ -164,8 +168,8 @@
 					$('#clippy_117').html(data);
 					$('#copiador').show();
 					alert('Guardado con exito! :D');
-					$.fancybox.close();
-					window.location.reload();
+					$('#guardarfile').show();
+					$.fancybox.close();					
 					});			
 			return false;
 			});
