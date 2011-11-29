@@ -39,7 +39,8 @@ class ActividadAdmin(admin.ModelAdmin):
         ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres', 'no_dato1'), 
                                                ('pobladores', 'estudiantes', 'miembros')]}),
         (None, {'fields': ['resultado',]}),
-        ('Evaluacion', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
+        ('Evaluacion de hombres', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
+        ('Evaluacion de mujeres', {'fields': [('relevancia_m', 'efectividad_m'), ('aprendizaje_m', 'empoderamiento_m'), 'participacion_m']}),
         ('Recursos', {'fields': [('foto1', 'foto2', 'foto3'), 'video', ('comentarios', 'acuerdos')]}),                                                          
     ]
     

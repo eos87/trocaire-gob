@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{request.session.salida}}{% endblock %}
+{% block title %}{{request.session.filtro.salida}}{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -8,6 +8,11 @@
 	height: 60px;
 	margin-top: -5px;
 	border-top: 6px #fff solid;	
+}
+.eval_tipo ul li{	
+	width: 129px !important;	
+	float: left !important;
+	display: inline-block !important;
 }
 </style>
 <script type="text/javascript" src="/files/js/underscore-min.js"></script>
@@ -29,7 +34,7 @@
 		$('.recursos').attr("disabled", true);
 	});	
 	$(window).load(function(){
-		$(":radio").iButton({
+		$(":radio").not('.nobutton').iButton({
 			labelOn: "SI"
 			, labelOff: "NO"
 			, easing: 'easeOutBounce'
@@ -62,7 +67,11 @@
 			<div class="varname">{{form.participantes.label}}</div>
 			<div>{{form.participantes}}</div>			
 			<div class="varname">{{form.evaluacion.label}}</div>
-			<div>{{form.evaluacion}}</div>
+			<div class="clean"></div>
+			<div class="eval_tipo">{{form.eval_tipo}}</div>			
+			<div>				
+				{{form.evaluacion}}
+			</div>
 			<div class="clean"></div>
 		</div>		
 	</div>

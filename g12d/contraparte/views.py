@@ -56,21 +56,29 @@ def variables(request):
         if form.is_valid():
             #almacenando variable principal en session
             request.session['main'] = form.cleaned_data['main_var']
-            for key in [a for a in form.cleaned_data.keys() if not a in ['main_var', 'total', 'bar_graph', 'pie_graph']]:
+            for key in [a for a in form.cleaned_data.keys() if not a in ['main_var', 'total', 'bar_graph', 'pie_graph', 'eval_tipo']]:
                 if form.cleaned_data[key]:
                     #almacenando variable dos en session
-                    request.session['var2'] = (key, form.cleaned_data[key])
-            
+                    if form.cleaned_data['eval_tipo'] == '2' and key == 'evaluacion':
+                        request.session['var2'] = ('%s_m' % key, form.cleaned_data[key])
+                        print request.session['var2']                        
+                    else:
+                        request.session['var2'] = (key, form.cleaned_data[key])
+                                    
             request.session['total'] = True if form.cleaned_data['total'] else False            
             request.session['bar_graph'] = True if form.cleaned_data['bar_graph'] else False
-            request.session['pie_graph'] = True if form.cleaned_data['pie_graph'] else False                                                                                       
+            request.session['pie_graph'] = True if form.cleaned_data['pie_graph'] else False 
+            if form.cleaned_data['evaluacion']:
+                request.session['eval_tipo'] = 'Mujeres' if form.cleaned_data['eval_tipo'] == 2 else 'Hombres'
+            else:
+                request.session['eval_tipo'] = None
                     
             return HttpResponseRedirect('/variables/output/')                                
     else:
         form = SubFiltroForm()
         
         #eliminando las variables de session
-        for a in ['var2', 'main', 'total', 'bar_graph', 'pie_graph']:
+        for a in ['var2', 'main', 'total', 'bar_graph', 'pie_graph', 'eval_tipo']:
             if a in request.session:
                 del request.session[a]
                                             
@@ -134,7 +142,7 @@ def output(request, saved_params=None):
             return HttpResponse('%s/i/%s' % (sitio.domain, obj._hash()))
     
     #creacion del diccionario con los datos de la tabla
-    if var2[0] == 'evaluacion':
+    if var2[0] in ['evaluacion','evaluacion_m']:
         opts2 = EVALUACION
         tipo = 'choice'
         values = eval(var2[0])

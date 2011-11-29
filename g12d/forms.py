@@ -68,12 +68,14 @@ evaluacion = {'relevancia_del_tema': 'relevancia',
               'nivel_de_empoderamiento': 'empoderamiento',
               'evaluacion_de_participacion': 'participacion'}
 
-recursos = {'comentarios': ['comentarios'],
-            'acuerdos': ['acuerdos'],
-            'fotos': ['foto1', 'foto2', 'foto3'],
-            'video': ['video']}
+evaluacion_m = {'relevancia_del_tema': 'relevancia_m',
+              'efectividad_de_la_accion': 'efectividad_m',
+              'grado_de_efectividad': 'aprendizaje_m',
+              'nivel_de_empoderamiento': 'empoderamiento_m',
+              'evaluacion_de_participacion': 'participacion_m'}
+
     
-class SubFiltroForm(forms.Form):
+class SubFiltroForm(forms.Form):    
     main_var = forms.ChoiceField(choices=to_choices(first_class.keys()), 
                                  widget=RadioSelect(attrs={'class':'main'}))
     participantes = forms.ChoiceField(choices=to_choices(participantes.keys()), 
@@ -82,9 +84,8 @@ class SubFiltroForm(forms.Form):
     evaluacion = forms.ChoiceField(choices=to_choices(evaluacion.keys()), 
                                    widget=RadioSelect(attrs={'class':'unique'}),
                                    required=False)
-#    recursos = forms.ChoiceField(choices=to_choices(recursos.keys()), 
-#                                 widget=RadioSelect(attrs={'class':'unique recursos'}),
-#                                 required=False)
+    eval_tipo = forms.ChoiceField(choices=((1, 'Hombres'), (2, 'Mujeres')), 
+                                  widget=RadioSelect(attrs={'class':'nobutton'}), initial=1)
     total = forms.BooleanField(required=False, label=u"Ver totales")
     bar_graph = forms.BooleanField(required=False, label=u"Gráfico de barras")
     pie_graph = forms.BooleanField(required=False, label=u"Gráfico de pastel")

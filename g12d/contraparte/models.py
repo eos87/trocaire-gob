@@ -117,12 +117,20 @@ class Actividad(models.Model):
                                   show_all=False,
                                   auto_choose=True,
                                   verbose_name=u'Resultado al que aporta')    
-    #evaluaciones
+    #evaluaciones de hombres
     relevancia = models.IntegerField(choices=EVALUACION, verbose_name=u'Importancia del tema/acción')
     efectividad = models.IntegerField(choices=EVALUACION, verbose_name='Efectividad de la acción')
     aprendizaje = models.IntegerField(choices=EVALUACION, verbose_name=u'Grado de aprendizaje')
     empoderamiento = models.IntegerField(choices=EVALUACION, verbose_name=u'Nivel de apropiación')
     participacion = models.IntegerField(choices=EVALUACION, verbose_name=u'Nivel de participación')
+    
+    #evaluaciones de mujeres
+    relevancia_m = models.IntegerField(choices=EVALUACION, verbose_name=u'Importancia del tema/acción')
+    efectividad_m = models.IntegerField(choices=EVALUACION, verbose_name='Efectividad de la acción')
+    aprendizaje_m = models.IntegerField(choices=EVALUACION, verbose_name=u'Grado de aprendizaje')
+    empoderamiento_m = models.IntegerField(choices=EVALUACION, verbose_name=u'Nivel de apropiación')
+    participacion_m = models.IntegerField(choices=EVALUACION, verbose_name=u'Nivel de participación')
+    
     #recursos
     comentarios = models.TextField(blank=True, default='')
     acuerdos = models.TextField(blank=True, default='')
