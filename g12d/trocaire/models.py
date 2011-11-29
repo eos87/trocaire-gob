@@ -31,6 +31,9 @@ class Organizacion(models.Model):
     
     class Meta:
         verbose_name_plural = u'Organizaciones'
+        permissions = (
+            ("view_programa", "Puede ver salidas por programa"),            
+        )
         
 class Generica(models.Model):
     nombre = models.CharField(max_length=150)

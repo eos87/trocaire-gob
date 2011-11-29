@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Login : Gobernabilidad{% endblock %}
+
+{% block extra_head %}
+{{form.media}}
+{{form.foo}}
+<link href="/files/css/formee/css/form-structure.css" rel="stylesheet" type="text/css"/>
+<link href="/files/css/formee/css/form-style.css" rel="stylesheet" type="text/css"/>
+<link href="/files/css/jquery.multiselect.css" rel="stylesheet" type="text/css"/>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/files/js/jquery.multiselect.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#id_meses").multiselect({
+	    noneSelectedText: 'Mes',
+	    selectedText: '# seleccionados',
+	    minWidth: 150	    
+	});
+});
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#id_password').val('password');
+        $('#id_username').val('usuario');
+        $('#id_password').click(function(){
+            if($(this).val()=='password'){$(this).val('')}
+        });
+        $('#id_password').focus(function(){
+            if($(this).val()=='password'){$(this).val('')}
+        });
+        $('#id_password').blur(function(){
+            if($(this).val()==''){$(this).val('password')}
+        });
+        $('#id_username').click(function(){
+            if($(this).val()=='usuario'){$(this).val('')}
+        });
+        $('#id_username').focus(function(){
+            if($(this).val()=='usuario'){$(this).val('')}
+        });
+        $('#id_username').blur(function(){
+            if($(this).val()==''){$(this).val('usuario')}
+        });
+    });
+</script>
+<style type="text/css">
+	.content .wrapper{
+		margin-bottom: 50px;
+		margin-top: 15px;
+	}
+	label{
+		float: left;
+		padding-right: 20px;	
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="banner banner-filtros">	
+	<div class="title">Iniciar Sesión</div>
+</div>
+<div style="width: 960px;">	
+	<div class="formfiltros">			
+		<center>		
+		<form action="." method="post" class="form">
+			{% csrf_token %}
+			<table>
+				{{form.as_table}}
+				<input type="hidden" name="next" value="{{ next }}" />
+			</table>
+			<input class="form-button" type="submit" value="Entrar" />	
+		</form>		
+		</center>
+	</div>
+</div>
+{% endblock %}

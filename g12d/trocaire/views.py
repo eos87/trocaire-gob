@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from g12d.contraparte.views import checkParams
 from g12d.forms import *
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def filtro_programa(request):
+    if not request.user.has_perm('trocaire.view_programa'):
+        error = '''<h1>Acceso restringido. Redirigiendo en 3 segundos.</h1>
+        <script>setTimeout("window.location='/'",3000)</script>'''        
+        return HttpResponseForbidden(error)
+    
     params = {}
     filtro = {}
     if request.method == 'POST':

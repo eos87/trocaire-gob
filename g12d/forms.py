@@ -19,22 +19,27 @@ MONTH_CHOICES = (('', 'Mes'),
 ANIOS_CHOICE = (('', u'Año'), (2011, 2011), (2012, 2012), )
 
 class ProyectoForm(FormFKAutoFill):
+    #validar que el usuario solo pueda ver su organizacion.
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(ProyectoForm, self).__init__(*args, **kwargs)
+        if not self.request.user.has_perm('trocaire.view_programa') or not self.request.user.is_superuser:                    
+            self.fields['organizacion'].queryset = Organizacion.objects.filter(admin=self.request.user)
+    
     organizacion = forms.ModelChoiceField(queryset=Organizacion.objects.all(), 
                                           widget=forms.Select(attrs={'class':'form-large'}))
     proyecto = forms.ModelChoiceField(queryset=Proyecto.objects.all(), 
                                       widget=forms.Select(attrs={'class':'form-large'}))
     resultado = forms.ModelChoiceField(queryset=Resultado.objects.all(), 
                                       widget=forms.Select(attrs={'class':'form-large'}))       
-    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, 
-                                      error_messages={'required': 'Seleccione al menos un mes'}, 
-                                      required=False, 
+    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False,
+                                      error_messages={'required': 'Seleccione al menos un mes'},                                       
                                       widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))    
     anio = forms.ChoiceField(choices=ANIOS_CHOICE, 
                              error_messages={'required': u'Seleccione un año'}, 
-                             required=False, 
-                             label=u'Año', 
-                             widget=forms.Select(attrs={'class':'form-large'}))  
-    
+                             required=False, label=u'Año', 
+                             widget=forms.Select(attrs={'class':'form-large'}))
+        
     class Foo:
         config = [{'on_change': {'field': 'organizacion'},
                    'fill': {'field': 'proyecto', 'model': 'Proyecto', 'app_label': 'contraparte'},

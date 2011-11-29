@@ -8,13 +8,13 @@ class Foo(StrAndUnicode):
         if foo:            
             self._load_items = simplejson.dumps(load_items)
             self._selected_items = simplejson.dumps(selected_items)       
-            self._data = foo.__dict__['config']            
+            self._data = foo.__dict__['config']                        
             
     def __unicode__(self):                 
         return mark_safe(CODE % (self._data, self._load_items, self._selected_items))
         
-class FormFKAutoFill(forms.Form):
-    def _foo(self): 
+class FormFKAutoFill(forms.Form):        
+    def _foo(self):        
         a = getattr(self, 'Foo')
         selected_items = {}
         load_items = {}

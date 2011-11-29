@@ -1,5 +1,6 @@
 # Create your views here.
 from django.shortcuts import render_to_response, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.template.context import RequestContext
 from django.db.models.loading import get_model
 from django.db.models import Sum
@@ -13,11 +14,12 @@ from models import *
 import datetime
 import thread
 
+@login_required
 def filtro_proyecto(request):
     proy_params = {}
     filtro = {}
     if request.method == 'POST':
-        form = ProyectoForm(request.POST)
+        form = ProyectoForm(request.POST, request=request)
         if form.is_valid():
             proy_params['organizacion__id'] = form.cleaned_data['organizacion'].id
             proy_params['proyecto__id'] = form.cleaned_data['proyecto'].id 
@@ -38,7 +40,7 @@ def filtro_proyecto(request):
             
             return HttpResponseRedirect('/variables/')            
     else:
-        form = ProyectoForm()
+        form = ProyectoForm(request=request)
             
     return render_to_response('contraparte/filtro.html', RequestContext(request, locals()))
 
@@ -48,6 +50,7 @@ def _get_query(params):
 #verificcar que no existan parametros vacios
 checkParams = lambda x: dict((k, v) for k, v in x.items() if x[k])
 
+@login_required
 def variables(request):
     filtro = request.session['filtro']        
     if request.method == 'POST':
