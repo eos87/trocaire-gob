@@ -58,9 +58,18 @@
 			<div class="index-list">
 			{% for org in organizaciones %}
 				<div class="index-entry">
-					<div class="nombre-corto">{{org.nombre_corto|upper}}</div>
-					<div class="nombre-largo">{{org.nombre}}</div>
-					<div class="actcount">Última actividad registrada el: <b style="color: red;">{{org.last_register|date:"d F Y"}}</b></div>
+					<div class="orginfo">
+						<div class="nombre-corto">{{org.nombre_corto|upper}}</div>
+						<div class="nombre-largo">{{org.nombre}}</div>
+						<div class="actcount">Última actividad registrada el: 
+						<b style="color: red;">{{org.last_register|date:"d F Y"}}</b></div>
+					</div>
+					<div class="orglogo">
+						{% if org.logo %}
+						<img src="{{org.logo.url_50x50}}" alt="{{org.nombre_corto}}">
+						{% endif %}
+					</div>
+					<div class="clean"></div>
 				</div>
 			{% endfor %}
 			</div>			

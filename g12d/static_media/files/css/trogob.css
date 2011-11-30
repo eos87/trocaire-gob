@@ -220,6 +220,12 @@ a{outline: none; text-decoration: none;}
 			.nombre-corto{color: #328290; font-size: 12px; font-weight: bold;}
 			.nombre-largo{color: #909090; font-size: 11px;}
 			.actcount{color: #5a5a5a; font-size: 11px;}
+			.orginfo{
+				.left(300px);
+			}
+			.orglogo{
+				.left(70px);
+			}
 		}				
 	}	
 }
