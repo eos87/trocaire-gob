@@ -9,6 +9,7 @@ from g12d.thumbs import ImageWithThumbsField
 from g12d.utils import get_file_path
 from g12d import short
 import datetime
+import urlparse, urllib, json, time
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^g12d\.thumbs\.ImageWithThumbsField"])
@@ -157,6 +158,25 @@ class Actividad(models.Model):
             
     def __unicode__(self):
         return u'%s - %s' % (self.nombre_actividad, self.fecha)
+    
+    def get_video_id(self):
+        if self.video:            
+            url_data = urlparse.urlparse(self.video)
+            query = urlparse.parse_qs(url_data.query)
+            return query["v"][0]
+        return None                        
+        
+    def get_vthumb(self):
+        id = self.get_video_id()
+        if id:
+            return '<img width="128" height="96" src="http://img.youtube.com/vi/%s/2.jpg" alt="thumb">' % id
+        return ''
+    
+    def get_video(self):
+        id = self.get_video_id()
+        if id:
+            return """http://www.youtube.com/embed/%s??showsearch=0&showinfo=0&iv_load_policy=3&autoplay=1""" % id
+        return ''
     
     def clean(self):
         suma_base = self.hombres + self.mujeres

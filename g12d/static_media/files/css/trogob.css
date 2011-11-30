@@ -456,6 +456,7 @@ ul.tabs li{
 			padding: 3px;
 			border: 1px solid #e3e3e3;
 			.rounded-corners(3px);
+			margin-left: 3px;
 		}
 	}	
 }

@@ -76,7 +76,8 @@ function loadCell(key, key2){
 				if(detalle=='multimedia'){
 					if(obj.foto1_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto1_pic+"'><img src='"+obj.foto1_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
 					if(obj.foto2_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto2_pic+"'><img src='"+obj.foto2_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
-					if(obj.foto3_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto3_pic+"'><img src='"+obj.foto3_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}					
+					if(obj.foto3_thumb!=''){actividad+="<a class='fancybox' rel='group' href='"+obj.foto3_pic+"'><img src='"+obj.foto3_thumb+"' alt='"+obj.nombre_actividad+"'></a>";}
+					if(obj.vthumb!=''){actividad+="<a class='yvideo fancybox.iframe' href='"+obj.video+"'>"+obj.vthumb+"</a>";}
 				}else{
 					actividad+="<div class='data' style='font-size: 12px;'><b>Comentarios: </b>"+obj.comentarios;
 					actividad+="<br><b>Acuerdos: </b>"+obj.acuerdos+"</div>";
@@ -99,7 +100,18 @@ function loadCell(key, key2){
 	$(function() {
 		$("a[rel=group]").fancybox({			
 			'titlePosition' 	: 'over',		
-		});	
+		});
+		$(".yvideo").fancybox({
+			maxWidth	: 800,
+			maxHeight	: 600,
+			fitToView	: false,
+			width		: 644,
+			height		: 368,
+			autoSize	: false,
+			closeClick	: false,
+			openEffect	: 'none',
+			closeEffect	: 'none'
+		});
 	});
 </script>
 {% endif %}

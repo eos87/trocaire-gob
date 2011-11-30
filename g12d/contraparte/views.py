@@ -185,8 +185,8 @@ def output(request, saved_params=None):
                 lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_thumb=obj.foto1.url_128x96,
                                   foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
                                   foto1_pic=obj.foto1.url_640x480, foto2_pic=obj.foto2.url_640x480, foto3_pic=obj.foto3.url_640x480, 
-                                  comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, 
-                                  fecha=obj.fecha.strftime('%d/%m/%Y')))
+                                  comunidad__nombre=obj.comunidad.nombre, municipio__nombre=obj.municipio.nombre, vthumb=obj.get_vthumb(),
+                                  video=obj.get_video(), fecha=obj.fecha.strftime('%d/%m/%Y')))
             elif data == 'comentarios':
                 lista.append(dict(nombre_actividad=obj.nombre_actividad, id=obj.id, comentarios=obj.comentarios,
                                   acuerdos=obj.acuerdos, comunidad__nombre=obj.comunidad.nombre, 
