@@ -20,6 +20,12 @@ class ProyectoAdmin(admin.ModelAdmin):
     filter_horizontal = ['municipios']
     inlines = [ResultadoInline, ]
     
+    #sobreescribiendo el metodo para filtrar los objetos    
+    def queryset(self, request):       
+        if request.user.is_superuser or request.user.has_perm('trocaire.view_programa'):
+            return Proyecto.objects.all()
+        return Proyecto.objects.filter(organizacion__admin=request.user)
+    
 
 admin.site.register(Proyecto, ProyectoAdmin)
 admin.site.register(Resultado)
@@ -56,6 +62,12 @@ class ActividadAdmin(admin.ModelAdmin):
             form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
             #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
         return form
+    
+    #sobreescribiendo el metodo para filtrar los objetos    
+    def queryset(self, request):       
+        if request.user.is_superuser or request.user.has_perm('trocaire.view_programa'):
+            return Actividad.objects.all()
+        return Actividad.objects.filter(organizacion__admin=request.user)
     
     class Media:
         js = ('/files/js/actividad.js', )        

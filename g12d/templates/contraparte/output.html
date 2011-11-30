@@ -180,7 +180,7 @@
 {% block content %}
 {% include "filtros_selectos.html" %}
 <div class="banner banner-filtros">
-	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}} {% if request.session.eval_tipo %}| {{request.session.eval_tipo}}{% endif %}</center>	
+	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}} {% if eval_tipo %}| {{eval_tipo}}{% endif %}</center>	
 </div>
 <div class="tablegatito">
 	<div class="tableoptions" id="tableoptions">

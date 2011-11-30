@@ -33,6 +33,7 @@ def filtro_proyecto(request):
             filtro['meses'] = form.cleaned_data['meses']
             filtro['year'] = form.cleaned_data['anio']
             filtro['salida'] = 'Por proyecto'
+            filtro['resultado'] = form.cleaned_data['resultado'].nombre_corto
             
             proy_params = checkParams(proy_params)
             request.session['filtro'] = filtro
@@ -100,6 +101,7 @@ def output(request, saved_params=None):
         params = request.session['params']
         main_field = request.session['main']
         var2 = request.session['var2']
+        eval_tipo = request.session['eval_tipo']
         
     query = _get_query(params)        
     dicc = {}    
@@ -124,7 +126,9 @@ def output(request, saved_params=None):
             params['total'] = True if request.session['total'] else False
             params['bar_graph'] = True if request.session['bar_graph'] else False
             params['pie_graph'] = True if request.session['pie_graph'] else False
-            params['salida'] = request.session['filtro']['salida']        
+            params['salida'] = request.session['filtro']['salida'] 
+            params['eval_tipo'] = request.session['eval_tipo']
+            params['resultado'] = request.session['filtro']['resultado']
             
             obj, created = Output.objects.get_or_create(params=str(params),
                                                date=datetime.date.today(),
@@ -225,12 +229,13 @@ def shortview(request, hash):
                            'proyecto': Proyecto.objects.filter(id__in=proys),
                            'meses': params['params'].get('mes__in', None),
                            'year': params['params'].get('fecha__year', None),
-                           'salida': params['salida']
+                           'salida': params['salida'],
+                           'resultado': params['resultado']
                            }
         
     variables['noshare'] = True
     variables['main_field'] = params['main']
-    for key in ['total', 'bar_graph', 'pie_graph', 'var2']:
+    for key in ['total', 'bar_graph', 'pie_graph', 'var2', 'eval_tipo']:
         variables[key] = params[key]
            
     return render_to_response('contraparte/output.html', RequestContext(request, variables))

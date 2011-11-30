@@ -25,6 +25,12 @@
 		</span>
 	</div>
 	{% endif %}
+	{% if filtro.resultado %}	
+	<div class="filtroselect">
+		Resultado<br>
+		<span>{{filtro.resultado}}</span>
+	</div>
+	{% endif %}
 	{% if filtro.meses %}
 	<div class="filtroselect">		
 		Meses<br>

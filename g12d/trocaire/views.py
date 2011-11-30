@@ -33,6 +33,7 @@ def filtro_programa(request):
             filtro['meses'] = form.cleaned_data['meses']
             filtro['year'] = form.cleaned_data['anio']
             filtro['salida'] = 'Por programa'
+            filtro['resultado'] = form.cleaned_data['resultado'].nombre_corto
             
             params = checkParams(params)
             request.session['filtro'] = filtro
