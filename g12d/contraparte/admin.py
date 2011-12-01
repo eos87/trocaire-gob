@@ -25,6 +25,15 @@ class ProyectoAdmin(admin.ModelAdmin):
         if request.user.is_superuser or request.user.has_perm('trocaire.view_programa'):
             return Proyecto.objects.all()
         return Proyecto.objects.filter(organizacion__admin=request.user)
+
+    def get_form(self, request, obj=None, ** kwargs):
+        if request.user.is_superuser:        
+            form = super(ProyectoAdmin, self).get_form(request, ** kwargs)
+        else:
+            form = super(ProyectoAdmin, self).get_form(request, ** kwargs)
+            form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
+            #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
+        return form
     
 
 admin.site.register(Proyecto, ProyectoAdmin)
