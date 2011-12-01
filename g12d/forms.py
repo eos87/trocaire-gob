@@ -67,17 +67,17 @@ participantes = {'participantes_por_sexo': ['hombres', 'mujeres'],
                  'participantes_por_tipo': ['autoridades', 'maestros', 'lideres', 
                                             'pobladores', 'estudiantes', 'miembros']}
 
-evaluacion = {'relevancia_del_tema': 'relevancia',
+evaluacion = {'importancia_del_tema': 'relevancia',
               'efectividad_de_la_accion': 'efectividad',
-              'grado_de_efectividad': 'aprendizaje',
-              'nivel_de_empoderamiento': 'empoderamiento',
-              'evaluacion_de_participacion': 'participacion'}
+              'grado_de_aprendizaje': 'aprendizaje',
+              'nivel_de_apropiacion': 'empoderamiento',
+              'nivel_de_participacion': 'participacion'}
 
-evaluacion_m = {'relevancia_del_tema': 'relevancia_m',
+evaluacion_m = {'importancia_del_tema': 'relevancia_m',
               'efectividad_de_la_accion': 'efectividad_m',
-              'grado_de_efectividad': 'aprendizaje_m',
-              'nivel_de_empoderamiento': 'empoderamiento_m',
-              'evaluacion_de_participacion': 'participacion_m'}
+              'grado_de_aprendizaje': 'aprendizaje_m',
+              'nivel_de_apropiacion': 'empoderamiento_m',
+              'nivel_de_participacion': 'participacion_m'}
 
     
 class SubFiltroForm(forms.Form):    
