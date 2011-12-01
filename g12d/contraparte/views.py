@@ -72,8 +72,8 @@ def variables(request):
             request.session['total'] = True if form.cleaned_data['total'] else False            
             request.session['bar_graph'] = True if form.cleaned_data['bar_graph'] else False
             request.session['pie_graph'] = True if form.cleaned_data['pie_graph'] else False 
-            if form.cleaned_data['evaluacion']:
-                request.session['eval_tipo'] = 'Mujeres' if form.cleaned_data['eval_tipo'] == 2 else 'Hombres'
+            if form.cleaned_data['evaluacion']:                
+                request.session['eval_tipo'] = 'Mujeres' if form.cleaned_data['eval_tipo'] == '2' else 'Hombres'
             else:
                 request.session['eval_tipo'] = None
                     
