@@ -52,6 +52,17 @@ $(document).ready(function(){
 	});
 	proyecto.multiselect("disable");	
 });
+$(document).ready(function(){
+	$("#id_fecha_inicio, #id_fecha_fin").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '2011:2015',
+		dateFormat: 'dd/mm/yy',		
+		monthNamesShort: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+		                  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],			
+	});	
+});
 </script>
 <style type="text/css">
 	.content .wrapper{
@@ -62,6 +73,9 @@ $(document).ready(function(){
 		float: left;
 		padding-right: 20px;	
 	}
+	.ui-datepicker{
+	 	font-size:13px !important;
+	}		
 </style>
 {% endblock %}
 

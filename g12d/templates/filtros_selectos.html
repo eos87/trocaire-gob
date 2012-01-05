@@ -31,20 +31,16 @@
 		<span>{{filtro.resultado}}</span>
 	</div>
 	{% endif %}
-	{% if filtro.meses %}
+	{% if filtro.fecha_inicio %}
 	<div class="filtroselect">		
-		Meses<br>
-		<span>
-			{% for mes in filtro.meses %}
-			{{mes|month_name}}{% if not forloop.last %}, {% endif %}
-			{% endfor %}
-		</span>
+		Fecha Inicio<br>
+		<span>{{filtro.fecha_inicio}}</span>
 	</div>
 	{% endif %}
-	{% if filtro.year %}
+	{% if filtro.fecha_fin %}
 	<div class="filtroselect">		
-		Año<br>
-		<span>{{filtro.year}}</span>
+		Fecha Fin<br>
+		<span>{{filtro.fecha_fin}}</span>
 	</div>
 	{% endif %}
 	<div class="clean"></div>		

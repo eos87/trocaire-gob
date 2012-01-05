@@ -24,14 +24,13 @@ def filtro_proyecto(request):
             proy_params['organizacion__id'] = form.cleaned_data['organizacion'].id
             proy_params['proyecto__id'] = form.cleaned_data['proyecto'].id 
             proy_params['resultado__id'] = form.cleaned_data['resultado'].id           
-            proy_params['mes__in'] = form.cleaned_data['meses']
-            proy_params['fecha__year'] = form.cleaned_data['anio']
+            proy_params['fecha__range'] = (form.cleaned_data['fecha_inicio'], form.cleaned_data['fecha_fin'])
             
             #guardando los filtros seleccionados para pintarlos en plantilla
             filtro['organizacion'] = [form.cleaned_data['organizacion'], ]
             filtro['proyecto'] = [form.cleaned_data['proyecto'], ]
-            filtro['meses'] = form.cleaned_data['meses']
-            filtro['year'] = form.cleaned_data['anio']
+            filtro['fecha_inicio'] = form.cleaned_data['fecha_inicio']
+            filtro['fecha_fin'] = form.cleaned_data['fecha_fin']
             filtro['salida'] = 'Por proyecto'
             filtro['resultado'] = form.cleaned_data['resultado'].nombre_corto
             
@@ -48,7 +47,7 @@ def filtro_proyecto(request):
 def _get_query(params):        
     return Actividad.objects.filter(**params)
 
-#verificcar que no existan parametros vacios
+#verificar que no existan parametros vacios
 checkParams = lambda x: dict((k, v) for k, v in x.items() if x[k])
 
 @login_required
@@ -89,7 +88,7 @@ def variables(request):
     return render_to_response('contraparte/variables.html', RequestContext(request, locals()))
 
 def output(request, saved_params=None):   
-    #chequear si no se trara de una salida guardada y reasignar variables    
+    #chequear si se trata de una salida guardada y reasignar variables    
     if saved_params:        
         total = saved_params['total']
         params = saved_params['params']
@@ -122,7 +121,7 @@ def output(request, saved_params=None):
             params = {}
             params['main'] = request.session['main']
             params['var2'] = request.session['var2']
-            params['params'] = request.session['params']
+            params['params'] = request.session['params']            
             params['total'] = True if request.session['total'] else False
             params['bar_graph'] = True if request.session['bar_graph'] else False
             params['pie_graph'] = True if request.session['pie_graph'] else False
@@ -227,8 +226,8 @@ def shortview(request, hash):
     
     variables['filtro'] = {'organizacion': Organizacion.objects.filter(id__in=orgs),
                            'proyecto': Proyecto.objects.filter(id__in=proys),
-                           'meses': params['params'].get('mes__in', None),
-                           'year': params['params'].get('fecha__year', None),
+                           'fecha_inicio': params['params'].get('fecha__range', None)[0],
+                           'fecha_fin': params['params'].get('fecha__range', None)[1],
                            'salida': params['salida'],
                            'resultado': params['resultado']
                            }

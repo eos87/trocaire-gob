@@ -32,13 +32,15 @@ class ProyectoForm(FormFKAutoFill):
                                       widget=forms.Select(attrs={'class':'form-large'}))
     resultado = forms.ModelChoiceField(queryset=Resultado.objects.all(), 
                                       widget=forms.Select(attrs={'class':'form-large'}))       
-    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False,
-                                      error_messages={'required': 'Seleccione al menos un mes'},                                       
-                                      widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))    
-    anio = forms.ChoiceField(choices=ANIOS_CHOICE, 
-                             error_messages={'required': u'Seleccione un año'}, 
-                             required=False, label=u'Año', 
-                             widget=forms.Select(attrs={'class':'form-large'}))
+#    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False,
+#                                      error_messages={'required': 'Seleccione al menos un mes'},                                       
+#                                      widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))    
+#    anio = forms.ChoiceField(choices=ANIOS_CHOICE, 
+#                             error_messages={'required': u'Seleccione un año'}, 
+#                             required=False, label=u'Año', 
+#                             widget=forms.Select(attrs={'class':'form-large'}))
+    fecha_inicio = forms.DateField(required=False, widget=forms.TextInput(attrs={'style':'width: 320px'}))
+    fecha_fin = forms.DateField(required=False, widget=forms.TextInput(attrs={'style':'width: 320px'})) 
         
     class Foo:
         config = [{'on_change': {'field': 'organizacion'},
@@ -53,9 +55,8 @@ class ProgramaForm(forms.Form):
     organizaciones = forms.ModelMultipleChoiceField(queryset=Organizacion.objects.all(), widget=forms.SelectMultiple(attrs={'style':'width: 320px'})) 
     proyectos = forms.ModelMultipleChoiceField(queryset=Proyecto.objects.all(), required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
     resultado = forms.ModelChoiceField(queryset=ResultadoPrograma.objects.all().exclude(id=8), widget=forms.Select(attrs={'class':'form-large'}))
-    meses = forms.MultipleChoiceField(choices=MONTH_CHOICES, required=False, widget=forms.SelectMultiple(attrs={'style':'width: 320px'}))
-    anio = forms.ChoiceField(choices=ANIOS_CHOICE, required=False, label=u'Año', widget=forms.Select(attrs={'class':'form-large'}))
-    
+    fecha_inicio = forms.DateField(required=False)
+    fecha_fin = forms.DateField(required=False) 
 
 #--- parametros para creacion del form de cruces ----
 first_class = {'tipo_actividad': ['tipo_actividad'], 

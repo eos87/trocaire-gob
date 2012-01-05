@@ -24,14 +24,13 @@ def filtro_programa(request):
             except:
                 params['proyecto__id__in'] = None
             params['resultado__aporta_a__id'] = form.cleaned_data['resultado'].id            
-            params['mes__in'] = form.cleaned_data['meses']
-            params['fecha__year'] = form.cleaned_data['anio']
+            params['fecha__range'] = (form.cleaned_data['fecha_inicio'], form.cleaned_data['fecha_fin'])
             
             #guardando los filtros seleccionados para pintarlos en plantilla
             filtro['organizacion'] = form.cleaned_data['organizaciones']
             filtro['proyecto'] = form.cleaned_data['proyectos']
-            filtro['meses'] = form.cleaned_data['meses']
-            filtro['year'] = form.cleaned_data['anio']
+            filtro['fecha_inicio'] = form.cleaned_data['fecha_inicio']
+            filtro['fecha_fin'] = form.cleaned_data['fecha_fin']
             filtro['salida'] = 'Por programa'
             filtro['resultado'] = form.cleaned_data['resultado'].nombre_corto
             
