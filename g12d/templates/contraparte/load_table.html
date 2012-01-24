@@ -70,7 +70,7 @@ function loadCell(key, key2){
 			if(data){$('#contenido_de').html('');}
 			_.each(data, function(obj){			
 				var actividad = "<div class='actividad'><div class='data'>\
-				<span>"+obj.nombre_actividad+"</span><span class='lugar'><b>"+obj.comunidad__nombre+", "+obj.municipio__nombre+"</b></span>\
+				<span>"+obj.org+' - '+obj.nombre_actividad+"</span><span class='lugar'><b>"+obj.comunidad__nombre+", "+obj.municipio__nombre+"</b></span>\
 				<span class='fecha'><b>"+obj.fecha+"</b></span></div><div class='media'>";
 				
 				if(detalle=='multimedia'){
