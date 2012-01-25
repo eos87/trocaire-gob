@@ -112,6 +112,7 @@ class Actividad(models.Model):
     pobladores = models.IntegerField(default=0, verbose_name=u'Pobladores/as')
     estudiantes = models.IntegerField(default=0)
     miembros = models.IntegerField(default=0, verbose_name=u'Miembros de Org Copartes de Trocaire')
+    tecnicos = models.IntegerField(default=0, verbose_name=u'Técnicas/os')
     resultado = ChainedForeignKey(Resultado, 
                                   chained_field="proyecto",
                                   chained_model_field="proyecto", 
@@ -181,7 +182,7 @@ class Actividad(models.Model):
     def clean(self):
         suma_base = self.hombres + self.mujeres
         suma_edad = self.adultos + self.jovenes + self.ninos
-        suma_tipo = self.autoridades + self.maestros + self.lideres + self.pobladores + self.estudiantes + self.miembros
+        suma_tipo = self.autoridades + self.maestros + self.lideres + self.pobladores + self.estudiantes + self.miembros + self.tecnicos
         
         if not self.no_dato:
             if suma_base != suma_edad:

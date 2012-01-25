@@ -66,7 +66,7 @@ first_class = {'tipo_actividad': ['tipo_actividad'],
 participantes = {'participantes_por_sexo': ['hombres', 'mujeres'],
                  'participantes_por_edad': ['adultos', 'jovenes', 'ninos'],
                  'participantes_por_tipo': ['autoridades', 'maestros', 'lideres', 
-                                            'pobladores', 'estudiantes', 'miembros']}
+                                            'pobladores', 'estudiantes', 'miembros', 'tecnicos']}
 
 evaluacion = {'importancia_del_tema': 'relevancia',
               'efectividad_de_la_accion': 'efectividad',

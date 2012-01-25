@@ -41,7 +41,7 @@ admin.site.register(Resultado)
 admin.site.register(Organizador)
 
 class ActividadAdmin(admin.ModelAdmin):
-    list_filter = ['proyecto__resultado__aporta_a', 'organizacion', 'proyecto', 'persona_organiza', 'fecha']
+    list_filter = ['resultado__aporta_a', 'organizacion', 'proyecto', 'persona_organiza', 'fecha']
     search_fields = ['nombre_actividad', 'organizacion__nombre_corto', 'persona_organiza__nombre']
     list_display = ['nombre_actividad', 'organizacion', 'fecha']
     
@@ -52,7 +52,7 @@ class ActividadAdmin(admin.ModelAdmin):
         ('Participantes por sexo', {'fields': [('hombres', 'mujeres'),]}),
         ('Participantes por edad', {'fields': [('adultos', 'jovenes', 'ninos', 'no_dato'),]}),
         ('Participantes por tipo', {'fields': [('autoridades', 'maestros', 'lideres', 'no_dato1'), 
-                                               ('pobladores', 'estudiantes', 'miembros')]}),
+                                               ('pobladores', 'estudiantes', 'miembros', 'tecnicos')]}),
         (None, {'fields': ['resultado',]}),
         ('Evaluacion de hombres', {'fields': [('relevancia', 'efectividad'), ('aprendizaje', 'empoderamiento'), 'participacion']}),
         ('Evaluacion de mujeres', {'fields': [('relevancia_m', 'efectividad_m'), ('aprendizaje_m', 'empoderamiento_m'), 'participacion_m']}),
@@ -68,8 +68,7 @@ class ActividadAdmin(admin.ModelAdmin):
             form = super(ActividadAdmin, self).get_form(request, ** kwargs)
         else:
             form = super(ActividadAdmin, self).get_form(request, ** kwargs)
-            form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()            
-            #form.base_fields['proyecto'].queryset = request.user.organizacion_set.all()                        
+            form.base_fields['organizacion'].queryset = request.user.organizacion_set.all()                      
         return form
     
     #sobreescribiendo el metodo para filtrar los objetos    
