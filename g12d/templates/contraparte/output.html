@@ -33,16 +33,94 @@
 }
 </style>
 <script type="text/javascript">
+	function _pieChartData(chart){
+		return escape(JSON.stringify({
+			'title'   : chart.options.title.text,
+			'series'  : chart.options.series
+		}))
+	}
+	var _bar_chart;
 	$(document).ready(function(){
+		var csrf_token =  $.cookie('csrftoken'); 
+		var html_table = $('#result_table').html();
 		{% if not noshare %}
 		$('#share').click(function(){
-			var csrf_token =  $.cookie('csrftoken');
-			$.post('.', {'url':1, 'csrfmiddlewaretoken':csrf_token}, function(data){
-				$('#clippy_117').html(data);
-				$('#copiador').show();				
-			});
+			// mandar a guardar la salida
+			{% if request.session.bar_graph or bar_graph %}
+			_bar_chart = {
+					'xAxis'  : bar_chart.xAxis[0].categories,
+					'yAxis'  : bar_chart.yAxis[0].axisTitle.textStr,
+					'series' : bar_chart.options.series,
+					'title'  : bar_chart.options.title.text
+			}
+			{% endif %}
+			$.post('.', {
+				'url'                : 1, 
+				'csrfmiddlewaretoken': csrf_token, 
+				'html_table'         : escape(html_table),
+				{% if request.session.bar_graph or bar_graph %}
+				'bar_chart'          : escape(JSON.stringify(_bar_chart)),
+				{% endif %}
+				{% if request.session.pie_graph or pie_graph %}
+				'pie_chart_one'      : _pieChartData(pie1_chart),
+				'pie_chart_two'      : _pieChartData(pie2_chart)
+				{% endif %}
+				}, // cierra params
+				function(data){
+						$('#clippy_117').html(data);
+						$('#copiador').show();				
+				});
 			return false;
 		});
+		$('#guardarfile').click(function(){	
+			{% if request.session.bar_graph or bar_graph %}
+			_bar_chart = {
+					'xAxis'  : bar_chart.xAxis[0].categories,
+					'yAxis'  : bar_chart.yAxis[0].axisTitle.textStr,
+					'series' : bar_chart.options.series,
+					'title'  : bar_chart.options.title.text
+			}
+			{% endif %}
+			
+			$(this).hide();			
+			var coment = $('#id_comentario').val();			
+			{% if request.session.bar_graph or bar_graph %}
+			var svg = bar_chart.getSVG();
+			{% endif %}
+			{% if request.session.pie_graph or pie_graph %}
+			var svg_pie1 = pie1_chart.getSVG();
+			var svg_pie2 = pie2_chart.getSVG();
+			{% endif %}			
+
+			var csrf_token =  $.cookie('csrftoken');
+			$.fancybox.showLoading();
+			$.post('.', {
+				'url'                 : 1,
+				'save'                : 1,
+				'comment'             : coment,	
+				'html_table'          : escape(html_table),
+				{% if request.session.bar_graph or bar_graph %}
+				'bar_svg'             : svg,
+				'bar_chart'           : escape(JSON.stringify(_bar_chart)),
+				{% endif %}
+				{% if request.session.pie_graph or pie_graph %}
+				'pie1_svg'            : svg_pie1,
+				'pie2_svg'            : svg_pie2,
+				'pie_chart_one'       : _pieChartData(pie1_chart),
+				'pie_chart_two'       : _pieChartData(pie2_chart),
+				{% endif %}		
+				'csrfmiddlewaretoken' : csrf_token
+				},
+				function(data){
+					$('#clippy_117').html(data);
+					$('#copiador').show();
+					alert('Guardado con exito! :D');
+					$('#guardarfile').show();
+					$.fancybox.close();					
+					});			
+			return false;
+		});
+			
 		$("#sharesave").fancybox({
 			maxWidth	: 800,
 			maxHeight	: 600,
@@ -137,43 +215,6 @@
 		   });
 	   });
 	});
-	$(document).ready(function(){
-		$('#guardarfile').click(function(){
-			$(this).hide();			
-			var coment = $('#id_comentario').val();			
-			{% if request.session.bar_graph or bar_graph %}
-			var svg = bar_chart.getSVG();
-			{% endif %}
-			{% if request.session.pie_graph or pie_graph %}
-			var svg_pie1 = pie1_chart.getSVG();
-			var svg_pie2 = pie2_chart.getSVG();
-			{% endif %}			
-
-			var csrf_token =  $.cookie('csrftoken');
-			$.fancybox.showLoading();
-			$.post('.', {
-				'url': 1,
-				'save': 1,
-				'comment':coment,				
-				{% if request.session.bar_graph or bar_graph %}
-				'bar_svg':svg,
-				{% endif %}
-				{% if request.session.pie_graph or pie_graph %}
-				'pie1_svg':svg_pie1,
-				'pie2_svg':svg_pie2,
-				{% endif %}		
-				'csrfmiddlewaretoken':csrf_token
-				},
-				function(data){
-					$('#clippy_117').html(data);
-					$('#copiador').show();
-					alert('Guardado con exito! :D');
-					$('#guardarfile').show();
-					$.fancybox.close();					
-					});			
-			return false;
-			});
-		});
 </script>
 {% endblock %}
 

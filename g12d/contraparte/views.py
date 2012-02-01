@@ -1,4 +1,4 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template.context import RequestContext
@@ -7,12 +7,15 @@ from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.sites.models import Site
 from django.utils import simplejson
+from BeautifulSoup import BeautifulSoup
+from htmlmin.minify import html_minify
 from g12d.forms import *
 from g12d import short
 from g12d.settings import EXPORT_SERVER
 from models import *
 import datetime
 import thread
+import urllib
 
 @login_required
 def filtro_proyecto(request):
@@ -111,11 +114,16 @@ def output(request, saved_params=None):
     #Aca inicia el guardado de la la salida, generamiento de url y reporte    
     if request.method == 'POST':        
         url = request.POST.get('url', '')
+        html_table = request.POST.get('html_table', '')
         comment = request.POST.get('comment', None)
         save = request.POST.get('save', None)
         bar_svg = request.POST.get('bar_svg', None)
         pie1_svg = request.POST.get('pie1_svg', None)
-        pie2_svg = request.POST.get('pie2_svg', None)        
+        pie2_svg = request.POST.get('pie2_svg', None)
+        bar_chart = request.POST.get('bar_chart', '')
+        pie_chart_one = request.POST.get('pie_chart_one', '')
+        pie_chart_two = request.POST.get('pie_chart_two', '')
+                
         if url != '':
             #guardando la session y generar URL
             params = {}
@@ -129,9 +137,11 @@ def output(request, saved_params=None):
             params['eval_tipo'] = request.session['eval_tipo']
             params['resultado'] = request.session['filtro']['resultado']
             
-            obj, created = Output.objects.get_or_create(params=str(params),
-                                               date=datetime.date.today(),
-                                               user=request.user)        
+            obj, created = Output.objects.get_or_create(params=str(params), 
+                                            html_table=sanitize_html(html_table), bar_chart=urllib.unquote(bar_chart),
+                                            pie_chart_one=urllib.unquote(pie_chart_one), pie_chart_two=urllib.unquote(pie_chart_two),
+                                            date=datetime.date.today(), user=request.user)  
+            
             if save == '1':
                 obj.file = True
                 if comment:                
@@ -143,7 +153,7 @@ def output(request, saved_params=None):
                 if pie2_svg:
                     thread.start_new_thread(get_graph_png, (pie2_svg, obj, 'pie2_img', 450))                  
                                      
-            obj.time = datetime.datetime.time(datetime.datetime.now())        
+            obj.time = datetime.datetime.time(datetime.datetime.now())       
             obj.save()        
             return HttpResponse('%s/i/%s' % (sitio.domain, obj._hash()))
     
@@ -167,19 +177,19 @@ def output(request, saved_params=None):
                 suma = qs.aggregate(campo_sum=Sum(foo))['campo_sum']
                 dicc[meh.nombre][foo] = suma or 0
                 
-    #si es una salida guardada retornar valores aqui         
+    # si es una salida guardada retornar valores aqui         
     if saved_params:
         return {'dicc': dicc, 'opts': opts, 'opts2': opts2, 'tipo': tipo, 'total': total,
                 'var2': var2, 'main_field': main_field}
     
-    #codigo para solicitar detalles    
+    # codigo para solicitar detalles    
     k = request.GET.get('k', '')
     k2 = request.GET.get('k2', '')
     data = request.GET.get('data', '')
     if k and k2:
         lista = []
         for obj in Actividad.objects.filter(id__in=[a.id for a in dicc[k][k2]]):
-            #armar el json a retornar
+            # armar el json a retornar
             if data == 'multimedia':                
                 lista.append(dict(org=obj.organizacion.nombre_corto, nombre_actividad=obj.nombre_actividad, id=obj.id, foto1_thumb=obj.foto1.url_128x96,
                                   foto2_thumb=obj.foto2.url_128x96, foto3_thumb=obj.foto3.url_128x96, 
@@ -194,19 +204,35 @@ def output(request, saved_params=None):
                                
     return render_to_response('contraparte/output.html', RequestContext(request, locals()))
 
-#dejo esta funcion solo para explicar como funciona el lambda de abajo XD date2json
-def date_to_json(param):     
-    lista = []        
-    for dicc in param:
-        foo = {}
-        for key, value in dicc.items():
-            if type(value) == datetime.datetime:
-                value = value.strftime('%Y-%m-%dT%H:%M:%S')
-            foo[key] = value
-        lista.append(foo)
-    return lista
+# curar el html de la tabla
+def sanitize_html(html_table):
+    html_table = urllib.unquote(html_table)
+    VALID_TAGS = ['table', 'thead', 'tbody', 'th', 'tr', 'td', 'span']
+    VALID_ATTRS = ['class', 'rowspan', 'colspan', 'id', 'width']
+    
+    while True:
+        soup = BeautifulSoup(html_table)
+        removed = False
+            
+        for tag in soup.findAll(True): # find all tags
+            if tag.name not in VALID_TAGS:
+                tag.extract() # remove the bad ones
+                removed = True
+            else: # it might have bad attributes
+                # a better way to get all attributes?
+                for attr in tag._getAttrMap().keys():
+                    if attr not in VALID_ATTRS:
+                        del tag[attr]
 
-date2json = lambda x: map(lambda a: {k:v.strftime('%Y-%m-%dT%H:%M:%S') if type(v) == datetime.datetime else v for k, v in a.items()}, x) 
+        # turn it back to html
+        html_table = str(soup)
+
+        if removed:
+            # we removed tags and tricky can could exploit that!
+            # we need to reparse the html until it stops changing
+            continue # next round
+
+        return html_minify(html_table).replace('<!DOCTYPE html>', '') 
 
 def shortview(request, hash):
     saved_out = get_object_or_404(Output, id=short.decode_url(hash))    
@@ -221,23 +247,20 @@ def shortview(request, hash):
         orgs = params['params']['organizacion__id__in']
         proys = params['params'].get('proyecto__id__in', [-1,])   
     
-    #llamando a la vista encargada de generar el dicc
-    variables = output(request, params)
-    
+    variables = {}    
     variables['filtro'] = {'organizacion': Organizacion.objects.filter(id__in=orgs),
                            'proyecto': Proyecto.objects.filter(id__in=proys),
                            'fecha_inicio': params['params'].get('fecha__range', None)[0],
                            'fecha_fin': params['params'].get('fecha__range', None)[1],
-                           'salida': params['salida'],
-                           'resultado': params['resultado']
+                           'salida': params['salida'], # por programa o proyecto
+                           'resultado': params['resultado'] # resultado seleccionado
                            }
-        
-    variables['noshare'] = True
     variables['main_field'] = params['main']
+    variables['html_table'] = saved_out.html_table
     for key in ['total', 'bar_graph', 'pie_graph', 'var2', 'eval_tipo']:
         variables[key] = params[key]
            
-    return render_to_response('contraparte/output.html', RequestContext(request, variables))
+    return render_to_response('contraparte/shortview.html', RequestContext(request, variables))
 
 def get_proyectos(request):
     ids = request.GET.get('ids', '')

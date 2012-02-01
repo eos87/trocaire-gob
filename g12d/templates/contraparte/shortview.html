@@ -1,6 +1,73 @@
 {% extends "base.html" %}
+{% load tools %}
+{% load clippy %}
+
+{% block title %}
+{{var2.1|unslugify}} por {{main_field|unslugify}}
+{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript" src="/files/js/table.exporting.js"></script>
+<script type="text/javascript" src="/files/js/highcharts.js"></script>
+<script type="text/javascript" src="/files/js/exporting_patched.js"></script>
+<script type='text/javascript' src='/files/js/jquery.tipsy.js'></script>
+<script type='text/javascript' src='/files/js/tabs.js'></script>
+
+<link rel="stylesheet" href="/files/css/tabs.css" type="text/css" />
+<link rel="stylesheet" href="/files/css/buttons.css" type="text/css" />
+<link rel="stylesheet" href="/files/css/formee/css/form-structure.css" type="text/css"/>
+<link rel="stylesheet" href="/files/css/formee/css/form-style.css" type="text/css"/>
+<style>
+.banner-filtros{	
+	height: 60px;
+	margin-top: -5px;
+	border-top: 6px #fff solid;	
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.tabs').tabs();
+});
+</script>
+{% endblock %}
 
 {% block content %}
-{{hash}}<br>
-{{query}}
+{% include "filtros_selectos.html" %}
+<div class="banner banner-filtros">
+	<center class="banner_title">{{var2.1|unslugify}} por {{main_field|unslugify}} {% if eval_tipo %}| {{eval_tipo}}{% endif %}</center>	
+</div>
+<div class="tablegatito">
+	<div class="tableoptions" id="tableoptions">
+		<div style="float: left;">
+			<a class="guardarXLS optionsbutton" href="#" onclick="exportarXLS('result_table'); return false;">Exportar <img src="/files/img/xls.png" alt=":D"></a>		
+		</div>
+		<div class="clean"></div>
+	</div>
+	<div class="dinamictable">
+		{{html_table|safe}}
+	</div>		
+</div>
+
+<div class="contenedortabs">
+	<ul class="tabs">
+		{% if bar_graph %}
+		<li class="active"><a href="#bargraph">Gr&aacute;fico de barra</a></li>
+		{% endif %}
+		{% if pie_graph %}
+		<li {% if pie_graph and not bar_graph %}class="active"{% endif %}><a href="#piegraph">Gr&aacute;fico de pastel</a></li>
+		{% endif %}
+	</ul> 
+	<div class="pill-content">	
+		{% if bar_graph %}
+		<div class="active" id="bargraph"><br>
+			
+		</div>
+		{% endif %}	
+		{% if pie_graph %}
+		<div {% if pie_graph and not bar_graph %}class="active"{% endif %} id="piegraph"><br>
+				
+		</div>	
+		{% endif %}	
+	</div>
+</div>
 {% endblock %}

@@ -205,12 +205,17 @@ class Output(models.Model):
     bar_img = models.URLField(blank=True, null=True, verify_exists=False)
     pie1_img = models.URLField(blank=True, null=True, verify_exists=False)
     pie2_img = models.URLField(blank=True, null=True, verify_exists=False)
+    # nueva forma de guardar salida
+    html_table = models.TextField(blank=True, default='')
+    bar_chart = models.TextField(blank=True, default='') # bar chart params if exists
+    pie_chart_one = models.TextField(blank=True, default='') # first pie chart params if exists
+    pie_chart_two = models.TextField(blank=True, default='') # second pie chart params if exists    
     
     def _hash(self):
         if self.id:
             return short.encode_url(self.id)
         
-    hash = property(_hash) 
+    hash = property(_hash)
     
     class Meta:
         ordering = ['-id']
