@@ -6,7 +6,10 @@
 </head>
 <body>
 {% for obj in lista %}
-{% load_table obj.dicc obj.opts2 obj.var2 obj.main_field obj.total obj.tipo 1 obj.comment %}<br>
+<div>{{comment}}</div>
+<div id="result_table">
+	{{obj.html_table|safe}}
+</div>
 {% if obj.bar_img %}
 <img src="{{obj.bar_img}}" alt="grafico de barra"><br>
 {% endif %}

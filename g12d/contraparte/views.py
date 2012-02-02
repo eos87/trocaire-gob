@@ -149,7 +149,7 @@ def output(request, saved_params=None):
                 if bar_svg:
                     thread.start_new_thread(get_graph_png, (bar_svg, obj, 'bar_img'))                    
                 if pie1_svg:
-                    thread.start_new_thread(get_graph_png, (pie1_svg, obj, 'pie1_img', 450))                    
+                    thread.start_new_thread(get_graph_png, (pie1_svg, obj, 'pie1_img', 450)) 
                 if pie2_svg:
                     thread.start_new_thread(get_graph_png, (pie2_svg, obj, 'pie2_img', 450))                  
                                      
@@ -281,9 +281,8 @@ def get_proyectos(request):
     return HttpResponse(simplejson.dumps(list(proyectos)), mimetype="application/json")
 
 def get_salidas(request):
-    sitio = Site.objects.all()[0].domain    
-    lista = []    
-    #obtener las salidas guardadas por el usuario
+    sitio = Site.objects.all()[0].domain
+    lista = []
     if request.user.is_authenticated():
         salidas = Output.objects.filter(user=request.user, file=True)
         for obj in salidas:
@@ -294,16 +293,8 @@ def generate_report(request):
     if request.method == 'POST':
         ids = request.POST['ids']  
         salidas = Output.objects.filter(id__in=map(int, ids.split(',')), user=request.user)
-        lista = []
-        for salida in salidas:
-            dicc = output(request, eval(salida.params))
-            dicc['comment'] = salida.comment
-            dicc['bar_img'] = salida.bar_img
-            dicc['pie1_img'] = salida.pie1_img
-            dicc['pie2_img'] = salida.pie2_img
-            lista.append(dicc)
         
-        response = render_to_response('report.html', {'lista': lista})
+        response = render_to_response('report.html', {'lista': salidas})
         response['Content-Disposition'] = 'attachment; filename=reporte.doc'    
         response['Content-Type'] = 'application/msword'
         response['Charset'] ='UTF-8'
@@ -318,8 +309,13 @@ def generate_report(request):
         return render_to_response('report.html', RequestContext(request, {'lista': lista}))
     
 def get_graph_png(svg, obj, field, width=940):
+    import types
     import urllib
+    
     data_dict = {'svg': svg, 'type': 'image/png', 'width': width, 'img_url': '1', 'filename': 'chart'}
+    # convertir todos los caracteres a utf-8
+    data_dict = dict([(k,v.encode('utf-8') if type(v) is types.UnicodeType else v) \
+    for (k,v) in data_dict.items()])
     
     server_data = urllib.urlencode(data_dict)
     response = urllib.urlopen(EXPORT_SERVER, data = server_data)    
