@@ -257,6 +257,9 @@ def shortview(request, hash):
                            }
     variables['main_field'] = params['main']
     variables['html_table'] = saved_out.html_table
+    variables['bar_chart'] = saved_out.bar_chart
+    variables['pie_chart_one'] = saved_out.pie_chart_one
+    variables['pie_chart_two'] = saved_out.pie_chart_two
     for key in ['total', 'bar_graph', 'pie_graph', 'var2', 'eval_tipo']:
         variables[key] = params[key]
            

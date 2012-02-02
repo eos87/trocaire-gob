@@ -44,7 +44,9 @@ $(document).ready(function(){
 		<div class="clean"></div>
 	</div>
 	<div class="dinamictable">
+		<div id="result_table">
 		{{html_table|safe}}
+		</div>
 	</div>		
 </div>
 
@@ -60,14 +62,149 @@ $(document).ready(function(){
 	<div class="pill-content">	
 		{% if bar_graph %}
 		<div class="active" id="bargraph"><br>
-			
+			<div id="barchart"></div>						
 		</div>
 		{% endif %}	
 		{% if pie_graph %}
 		<div {% if pie_graph and not bar_graph %}class="active"{% endif %} id="piegraph"><br>
-				
+				<div>	
+				<!-- 	<h3>Gr&aacute;ficos de Pastel</h3> -->
+					<div id="piechart1"></div>
+					<div id="piechart2"></div>
+					<div class="clean"></div>	
+				</div>
 		</div>	
 		{% endif %}	
 	</div>
 </div>
+<style type="text/css">
+#piechart1, #piechart2{
+	float: left;
+	margin-left: 10px;
+	border: 1px #eee solid;
+	margin-bottom: 15px;
+	padding-top: 1px;
+}
+</style>
+<script type="text/javascript">
+	function mk_pchart(container, title, series){
+		new Highcharts.Chart({
+            chart: {
+                renderTo: container,
+                defaultSeriesType: 'pie',
+                height: 400,
+                width: 450
+            },
+            title: {
+                text: title
+            },
+            subtitle: {
+                text: ''
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            tooltip: pieTooltip,
+            plotOptions: piePlotOptions,
+            series: series
+        });		
+	}
+	function mk_cchart(container, title, xAxis, yAxis, series){
+		new Highcharts.Chart({
+            chart: {
+                renderTo: container,
+                defaultSeriesType: 'column',
+                height: 480,
+                width: 940
+            },
+            title: {
+                text: title
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: xAxis
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            yAxis: {
+                min: 0,
+                title: {
+                    text: yAxis
+                }
+            },
+            legend: leyenda,
+            tooltip: columTooltip,
+            plotOptions: columPlotOptions,
+            series: series
+        });
+	}
+	var piePlotOptions = {
+	       pie: {
+	          allowPointSelect: true, cursor: 'pointer', 
+	          dataLabels: {
+	             enabled: false
+	          },
+	          showInLegend: true
+	       },
+	       series: {
+	          dataLabels: {
+	              enabled: true,
+	              align: "center",
+	              formatter: function() { return ''+ this.percentage.toFixed(0) + ' %'; },
+	              color: '#000',
+	              style: { font: '12px Trebuchet MS, Verdana, sans-serif' }
+	          }
+	      }
+	}
+	var pieTooltip = {
+	    formatter: function() {
+	        return '<b>'+ this.point.name +'</b>: '+ this.y;
+	    }
+	}
+	
+	var columPlotOptions = {
+	    column: {            
+	        borderWidth: 0,
+	        pointPadding: 0.2
+	    },
+	    series: {           
+	        dataLabels: {
+	            enabled: true,
+	            align: "center",
+	            formatter: function() {
+	                return ''+ this.y.toFixed(0);
+	            },
+	            color: '#000'
+	        }
+	    }
+	}
+	var columTooltip = {
+	    formatter: function() {
+	        return ''+
+	            '<b>' + this.x + ' | '+ this.series.name +':</b> '+ this.y;
+	    }
+	}
+	var leyenda = {
+	    layout: 'horizontal',
+	    align: 'center',
+	    verticalAlign: 'bottom',
+	    shadow: true
+	}
+	{% if bar_graph %}
+	var bar_chart = {{bar_chart|safe}};
+	{% endif %}
+	{% if pie_graph %}
+	var pie_chart_one = {{pie_chart_one|safe}};
+	var pie_chart_two = {{pie_chart_two|safe}};
+	{% endif %}
+	
+	$(document).ready(function() {
+		{% if bar_graph %}
+		mk_cchart('barchart', bar_chart.title, bar_chart.xAxis, bar_chart.yAxis, bar_chart.series);
+		{% endif %}
+		{% if pie_graph %}
+		mk_pchart('piechart1', pie_chart_one.title, pie_chart_one.series);
+		mk_pchart('piechart2', pie_chart_two.title, pie_chart_two.series);
+		{% endif %}
+	});
+</script>
 {% endblock %}
