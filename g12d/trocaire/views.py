@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 def filtro_programa(request):
     if not request.user.has_perm('trocaire.view_programa'):
         error = '''<h1>Acceso restringido. Redirigiendo en 3 segundos.</h1>
-        <script>setTimeout("window.location='/'",3000)</script>'''        
+        <script>setTimeout("window.location='/'",3000)</script>'''
         return HttpResponseForbidden(error)
     
     params = {}
@@ -23,7 +23,12 @@ def filtro_programa(request):
                 params['proyecto__id__in'] = form.cleaned_data['proyectos'].values_list('id', flat=True)
             except:
                 params['proyecto__id__in'] = None
-            params['resultado__aporta_a__id'] = form.cleaned_data['resultado'].id            
+
+            # adding all results option
+            result_foo = form.cleaned_data.get('resultado', None)
+            if result_foo:
+                params['resultado__aporta_a__id'] = result_foo.id
+
             params['fecha__range'] = (form.cleaned_data['fecha_inicio'], form.cleaned_data['fecha_fin'])
             
             #guardando los filtros seleccionados para pintarlos en plantilla
@@ -32,7 +37,8 @@ def filtro_programa(request):
             filtro['fecha_inicio'] = form.cleaned_data['fecha_inicio']
             filtro['fecha_fin'] = form.cleaned_data['fecha_fin']
             filtro['salida'] = 'Por programa'
-            filtro['resultado'] = form.cleaned_data['resultado'].nombre_corto
+
+            filtro['resultado'] = result_foo.nombre_corto if result_foo else 'Todos los resultados'
             
             params = checkParams(params)
             request.session['filtro'] = filtro

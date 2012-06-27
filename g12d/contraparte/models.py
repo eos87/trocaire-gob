@@ -111,8 +111,8 @@ class Actividad(models.Model):
     lideres = models.IntegerField(default=0, verbose_name=u'Lideres/zas Comunitarios')
     pobladores = models.IntegerField(default=0, verbose_name=u'Pobladores/as')
     estudiantes = models.IntegerField(default=0)
-    miembros = models.IntegerField(default=0, verbose_name=u'Miembros de Org Copartes de Trocaire')
-    tecnicos = models.IntegerField(default=0, verbose_name=u'Técnicas/os')
+    miembros = models.IntegerField(default=0, verbose_name=u'Miembros de organizaciones comunitarias')
+    tecnicos = models.IntegerField(default=0, verbose_name=u'Técnicas/os de Organizaciones Copartes de TROCAIRE')
     resultado = ChainedForeignKey(Resultado, 
                                   chained_field="proyecto",
                                   chained_model_field="proyecto", 
